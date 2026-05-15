@@ -92,7 +92,7 @@ const extendedUserObject = {
 
 console.log(extendedUserObject);
 
- The spread operator on an object, will "spread" all the properties: values of the object inside the new one */
+ The spread operator on an object, will "spread" all the properties: values of the object inside the new one 
 
 const hobbies = ["Training", "Gaming"];
 
@@ -103,7 +103,6 @@ for (const hobby of hobbies) {
 
 /*  for in is used to iterate over the properties of an object. It returns every key inside rthe user object, not the
 value, in case we want the value, we would need to use `user[property]`, where property is each property being iterated
- */
 
 const user = {
   name: "Caio",
@@ -113,3 +112,31 @@ const user = {
 for (property in user) {
   console.log(`The value of the property ${property} is ${user[property]}`);
 }
+*/
+
+/* Functions as values
+
+For example, we can set a timr with help of the built-in setTimeout, a function that is provided by the browser
+
+setTimeout receives two parameters, the first input value it wants is a function itself, a function that can be defined
+with the function keyword, or as an error function.
+
+What is important to understand is that the `() => {}` input is creating a new anonymous function. We could also create the
+function manually beforehand and simply pass it as argument
+*/
+
+function handleTimeout() {
+  console.log('Timed out');
+}
+
+// Remember, arrow functions are stored in variables, because arrow functions never accept a name in front of them, they
+// always are created in an anonymous way
+
+const handleTimeoutArrow = () => {
+  console.log('Timed out... Again')
+}
+
+ 
+ 
+
+setTimeout(handleTimeout, 3000)
