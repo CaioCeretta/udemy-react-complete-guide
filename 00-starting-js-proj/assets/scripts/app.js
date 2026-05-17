@@ -123,7 +123,6 @@ with the function keyword, or as an error function.
 
 What is important to understand is that the `() => {}` input is creating a new anonymous function. We could also create the
 function manually beforehand and simply pass it as argument
-*/
 
 function handleTimeout() {
   console.log('Timed out');
@@ -136,7 +135,61 @@ const handleTimeoutArrow = () => {
   console.log('Timed out... Again')
 }
 
- 
- 
-
 setTimeout(handleTimeout, 3000)
+setTimeout(handleTimeoutArrow, 2000)
+
+
+setTimeout(() => {
+  console.log('More timing out...')
+}, 4000)
+
+function greeter(greetFn) {
+  greetFn();
+}
+
+greeter(() => {
+  console.log("Hi")
+})
+
+
+
+// Functions inside of functions
+
+function init() {
+  function greet() {
+    console.log('Hi');
+  };
+
+  greet()
+}
+
+
+const initialize = init;
+init()
+*/
+
+const hobbies = ["Sports", "Gaming"];
+
+/*  The push method is not a good option because it is mutating the array. Arrays are objects and objects in JavaScript are
+so called reference values, which in the end, simply means that in a variable we don't store the value, but the address
+value in memory.
+When we then call push, for example, JS will reach out to that address, "open the value" in that address and add that
+new item to it. Therefore, that array in memory changes but the address does not.
+
+With primitive values, like strings or numbers, we could instead say that the string itself is stored in the variable.
+
+We can notice it when we can modify an array despite defining it as a constant. Const does not mean that the value cannot
+be edited, but that the variable can't be overwritten. So, because of it, we can't use it with an equal sign to assign
+a new value.
+
+ We can define an object as a constant and take advantage of the fact that those objects are accessed by reference/address
+ to manipulate those values in memory by using that address.
+
+*/
+hobbies.push("Training");
+
+console.log(hobbies)
+
+
+
+
