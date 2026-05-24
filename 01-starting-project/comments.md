@@ -30,7 +30,23 @@ That loaded js file, the index.js file, is the key. The code that is loaded and 
 react code we wrote. Therefore, at the end of the day, the index.html file is the one being served to the browser
 
 • Inside the index.jsx, is the App component funciton that is being imported into the file and in the file the app component
-is being used as value/argument for the createRoot function that is being called.
+is being used as value/argument for the createRoot function that is being called. To be precise, this is the first file
+to be loaded by the react app, commonly set up inside the package.json. Commonly set to the index.js of the built index
+
+• Inside the rendered html, we will only see what we have defined in the index.html. React uses the div with the id of
+root, to render all its jsx inside of it.
+
+• We can also see why our functions must be uppercase. html, div, image, p, are all html tags that start with lower case
+but custom components on the other hand (components created by us as developers), must start with uppercase character to
+tell React that is not a built in component. That is how React can tell custom components apart of built in components.
+This not only prevent potential name classes (e.g Header with <header>), but it also changes how react handles components.
+
+Built in components, like header, image, div, and so on, are rendered as DOM nodes by react. Custom components on the other
+hand are just functions and are there to be executed as functions by React. Then, it then just takes a look at them, takes
+the returned JSX code and starts analzyzing that code until it ends up with only built in elements and at a certain point
+of time, it then renders on the screen
+
+
 
 
 
