@@ -1,4 +1,4 @@
-## Basic Comments
+## Section 3 - React Essentials
 
 • JSX allows us to write HTML code inside of javascript files
 
@@ -45,6 +45,81 @@ Built in components, like header, image, div, and so on, are rendered as DOM nod
 hand are just functions and are there to be executed as functions by React. Then, it then just takes a look at them, takes
 the returned JSX code and starts analzyzing that code until it ends up with only built in elements and at a certain point
 of time, it then renders on the screen
+
+### Components
+
+• React projeects must be built via build process before deployment. This means that the code we write is different from
+the code we deploy, which is a bundle of generated files that include our optimized code and any other extra asset. This
+makes us able to access images differently. Where we were used to write something as "src/assets/react-core-concepts.png",
+now we add our images relative to the app.jsx file like, for example
+
+```js
+
+import reactImg from './assets/images/react-core-concepts';
+
+/*  But this would look rather strange, because importing an image file inside a javascript file is not something we
+normally do in javascript. But this will work because of tht  same build process that will also make that JSX code to
+work. Like the ./index.css import in the index.jsx file  */
+```
+
+• One of the main advantages of using components is that they are reusable and we can use them as often as we want.
+For example, imagine we have a list of "Core Concepts", and we want each concept to have its own block, layout, etc.
+We would then create a CoreConceptItem, and create it differently based on properties we pass to it. This way we can
+define a normal javascript function once and use it multiple times.
+
+• Object destructuring in the function parameters:
+
+When defining a component like:
+
+`function CoreConcept({ title, description, img }) { ... }`
+
+React is passing an object
+
+{
+  title: "Component",
+  description: "UI block",
+  imgUrl: "img.png"
+}
+
+And the function extracts (destructres) the properties directly in the parameters.
+
+Without destructuring, it would be accessed like
+
+`function CoreConcept(props) { console.log(props.title)}`
+
+And with destructuring
+
+`function CoreConcept(props) { console.log(title)}`
+
+• Named Parameters:
+
+In typescript and POO, we often define functions where we define the arguments by name. Order doesn't matter, and the owm
+language natively understands it. One example would be:
+
+```ts
+class User {
+  constructor({
+    name,
+    age,
+    admin
+  }: {
+    name: string;
+    age: number;
+    admin: boolean;
+  }) {
+    console.log(name);
+  }
+}
+
+new User({
+  age: 20,
+  name: "Caio",
+  admin: true
+});
+```
+
+
+
 
 
 
