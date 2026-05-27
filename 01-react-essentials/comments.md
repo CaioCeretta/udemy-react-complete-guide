@@ -130,7 +130,15 @@ By spreading the object like this, it will pull out all the key values pairs bas
 where the properties we expect in a Component, are the same as the one we are defining in the object. This would work
 just like the above.
 
+• Destructuring Component Parameters
 
+When we define something as `function CoreConcept({title, description, image}){...}`, what title is receiving is the first
+parameter of the props object.
+Object destructuring in javascript basically means that we can target the different properties of the incoming object by
+name and we have to use the same properties as we are setting as props.
+
+We have to use the exact same words in those curly braces equal to the properties. And when doing so JS will then go ahead
+and give us these three properties as standalone variables in the function.
 
 
 
