@@ -46,7 +46,7 @@ hand are just functions and are there to be executed as functions by React. Then
 the returned JSX code and starts analzyzing that code until it ends up with only built in elements and at a certain point
 of time, it then renders on the screen
 
-### Components
+### Components Pt. 1
 
 • React projeects must be built via build process before deployment. This means that the code we write is different from
 the code we deploy, which is a bundle of generated files that include our optimized code and any other extra asset. This
@@ -140,8 +140,45 @@ name and we have to use the same properties as we are setting as props.
 We have to use the exact same words in those curly braces equal to the properties. And when doing so JS will then go ahead
 and give us these three properties as standalone variables in the function.
 
+• Scoped Styles
 
+One interesting thing to keep in mind, is that the styles, defined in .css files, are not scoped. Which means that, if for
+example, the index.css used globally does not contain any header style, but a <Header> component imported in the App.jsx
+that contains a `Header.css`, in which there are styles for the header. When we create a header inside of that app.jsx
+it will use the stylings defined in the header.css.
 
+This happens because as soon as a component is mounted, his CSS is injected globally in the <head> of the page.
+
+• `children` Prop vs `Attribute Props`
+
+1. children:
+
+`<TabButton>Components</TabButton> - function TabButton({children}) { return <button> {children} </button >}`
+
+Using children inside of a component is usually used for components that take a single piece of renderable content, this
+approach is closer to "normal HTML usage". It is especially convenient when passing JSX code as a value to another component
+
+2. Attribute Props:
+
+`<TabButton label="Components" /> - function TabButton({label}) { return <button> {label} </button >}`
+Using attributes makes sense if we have multiple smaller pieces of information that must be passed to a component.
+Adding extra props instead of just wrapping the content with the component tags mean extra work
+
+This is down to personal preference. But the two approaches may be seen in overall projects.
+
+• Selecting Elements
+
+In Vanilla JS we woul typically add event listeners to HTML elements with:
+
+`document.querySelector('#myButton').addEventListener('click', () => { console.log('clicked')})`
+
+But in React, we are not in VanillaJS. When working with React we don't want to write imperative code like that. Instead,
+we want to write declarative code, therefore, when working with React as developers, we really don't want to start interacting
+with the DOM/with the page with codes like this.
+
+In React, we add a special attribute to these elements, named "onClck". onClick points to a function that should be executed
+when that event occurs. We can either define an anonymous function inside the onClick, or utilize a previously created
+function on the event, the name of that function usually has to do with the event, like `handleClick`
 
 
 
