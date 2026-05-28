@@ -180,6 +180,26 @@ In React, we add a special attribute to these elements, named "onClck". onClick 
 when that event occurs. We can either define an anonymous function inside the onClick, or utilize a previously created
 function on the event, the name of that function usually has to do with the event, like `handleClick`
 
+• Toggling between core concepts menu list
+
+By default, when just passing handleSelect as a value to onSelect, and to that onClick, we don't get the identifier because
+that is some logic specific to our application and react does not know we want such identifier.
+
+In order to fix this and to have to control on how `handleSelect` is being executed by React, we can do this by instead of
+pointing to that handleSelect function, but to pass an arrow function to the onSelect property.
+
+Instead of simply passing the function by reference with onSelect={handleSelect}, we pass an arrow function as a value to
+that property with `onSelect={() => handleSelect()}`. By doing it like this, it won't be called as soon as a component
+mounts, but when that line of code is parsed, it is just the arrow function that will be defined not the code inside of
+it.
+
+Now, since we are using that arrow function, we can write something as `handleSelect('components')` to pass a string
+identifier to it. That same function must now receive a parameter of the current page to alter its styling
+
+
+
+
+
 
 
 
