@@ -196,6 +196,49 @@ it.
 Now, since we are using that arrow function, we can write something as `handleSelect('components')` to pass a string
 identifier to it. That same function must now receive a parameter of the current page to alter its styling
 
+• dot notation or bracket notation for objects? 
+
+We had an example, where we had a state named tabContent, and as soon as we clicked on the button "components", that string
+would be assigned to the tabContent state. After that, i would render a dynamic object information based on that key,
+which in the object, is also component. Should i use dot or [] on that case?
+
+Assume we have an object inside the data.js like this
+
+```js
+  export const EXAMPLES = {
+  components: {
+    title: "Components",
+  },
+
+  jsx: {
+    title: "JSX",
+  },
+  ...
+```
+
+Its keys are "components", "jsx", ...
+
+After that, in our App,jsx, we have something like
+
+`const [tabContent, setTabContent] = useState('')`
+
+And this state will hold WHICH menu button was selected.
+
+Therefore, when calling handleSelect('components'), React sets that state as 'components' and tht state is equal to
+'components'
+
+Here we have the two options of the dot and the bracket:
+
+1. dot notation (`EXAMPLES.tabContent.title`)
+
+dot does not use the value of the variable, it will literaly fetch for EXAMPLES.tabContent. But that object does not exist
+and EXAMPLES.tabContent turns out to be undefined.
+
+JS interprets the not notation in a literal way
+
+2. brackets notation (`EXAMPLES[tabContent].title`)
+
+When we do this way. JS replaces the value of the variable tabContent to components, and it will work as expected.
 
 
 
