@@ -262,3 +262,116 @@ if (tabContent) {
 ```
 
 And put that at the place we were outputing that text.
+
+
+• Component conditional return
+
+There are three ways that we can conditionally return a component function
+
+1. Ternary Operator (For simple conditions)
+
+It is ideal when we have a logic "A or B", like
+
+```js
+return (
+  <div className="container">
+    isDeleting ? (
+      <DeletingLoader />
+    ) : (
+      <DeleteConfirmation onConfirm={handleDelete} />
+    )
+)
+```
+
+2. Short-circuit with && (For "All or nothing" conditions)
+
+If we don't need an else, the && operator is much cleaner. It renders the component only if the condition is true
+
+```js
+return (
+  <div>
+    {isDeleting && <ModalLoading />}
+    <button onClick={() => setIsDeleting(true)}>Deletar</button>
+  </div>
+);
+```
+
+3. Element variables (best option for clarity)
+
+If the logic start getting confuse, the best practice is to remove the logic from the return and assign it to a variable.
+That will keep our JSX cle an and easy to visually scan it
+
+```js
+const renderContent = () => {
+  if(isDeleting) return <DeletingDiv />
+
+  return (
+    <div data-test-id="alert">
+      <h2>Are you sure?</h2>
+      <button>Proceed</button>
+    </div>
+  );
+}
+
+return (
+  <div className="wrapper">
+    {renderContent()}
+    <button onClick={() => setIsDeleting(!isDeleting)}>Toggle</button>
+  </div>
+)
+```
+
+When to use each really depends on the case
+
+The ternary is more used when we have two short exclusive options, like a login and logout
+The && operator is used when we want to show something only when certain condition is met
+The variable/funmction is when the logic is complex or the HTML block is too big
+
+We must always avoid nesting ternaries. If we get to this point, the code will start getting really confuse. In those cases
+we should use a `switch` or an `if/else` before the return
+
+• Logic operators to decide what to return
+
+We need to be careful when deciding what to return with a && operator
+
+In JS, the `return` is a instruction (statement), and operators like && or the ternary `? :` wait for expressions (values).
+Sometimes, we can't put a `return` inside a logic operator. Here are some points to always be careful
+
+1. Return instruction inside of logic
+
+Assume we try to make something as
+
+isDeleting && return ...
+
+This is syntactically impossible in JS. The return must come first, and what comes after it, is what is going to be returned
+
+2. Incomplete ternary syntax
+
+We must always put content both after the ? and after the :
+
+• Instructions (Statements) vs Expressions
+
+1. `if` is a *struction (statement)*
+
+`if` is like a doorman. It decides which path the code will follow. Inside the {} blocks of an `if`, we can place any
+command, including `return`
+
+This works
+if(condition) {
+  return <Alert> // Return is an output command
+}
+
+2. The `&&` and the ternary are *expressions*
+
+A expression is somethjing that result in a value, like 2 + 2 results in 4. JS tries to resolve everything that is on that
+line to reach a final result.
+
+The `return` is not a value. It is an action of finishing a function. That's why we can't mix it in the same operation
+
+`const result = condition && return <Alert />`
+
+This won't work because JS basically thinks: "How am i going to calculate the value of something that tells the function to
+stop"
+
+
+
