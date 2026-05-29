@@ -12,17 +12,17 @@ development server before it reaches it.
 . In order for a function be recognized and used as a component in React, it is a function that must follow two rules.
 
 1. Function name must start with uppercase
-. Multi-word should be written in PascalCase
-. It is *recommended* to pick a name that describes the UI building block, like Header/AdminHeader
+   . Multi-word should be written in PascalCase
+   . It is _recommended_ to pick a name that describes the UI building block, like Header/AdminHeader
 
 2. The function must return a "renderable" content
-. Value that can be rendered (displayed on the screen) by React
-. In most cases: Return JSX also allowed: string, number, null, array of allowed values
+   . Value that can be rendered (displayed on the screen) by React
+   . In most cases: Return JSX also allowed: string, number, null, array of allowed values
 
 • We define functions with the function keyword, but do invoke it with, e.g. `Header()`. But that's not how we use a React
 component, istead, it will be the library that will, under the hood, to execute these functions. it will understand what
 it should be shown on the screen and instead of being invoked with (), react allows us to use our component functions like
-regular HTML tags inside our JSX code. 
+regular HTML tags inside our JSX code.
 
 • When inspecting the source code of the app, we will notice that we won't find the Header, nor any other web site content
 in that source code. No imagine, no titles, nothing. Just some metadata and at least one javascript file being imported.
@@ -54,8 +54,7 @@ makes us able to access images differently. Where we were used to write somethin
 now we add our images relative to the app.jsx file like, for example
 
 ```js
-
-import reactImg from './assets/images/react-core-concepts';
+import reactImg from "./assets/images/react-core-concepts";
 
 /*  But this would look rather strange, because importing an image file inside a javascript file is not something we
 normally do in javascript. But this will work because of tht  same build process that will also make that JSX code to
@@ -76,9 +75,9 @@ When defining a component like:
 React is passing an object
 
 {
-  title: "Component",
-  description: "UI block",
-  imgUrl: "img.png"
+title: "Component",
+description: "UI block",
+imgUrl: "img.png"
 }
 
 And the function extracts (destructres) the properties directly in the parameters.
@@ -101,7 +100,7 @@ class User {
   constructor({
     name,
     age,
-    admin
+    admin,
   }: {
     name: string;
     age: number;
@@ -114,7 +113,7 @@ class User {
 new User({
   age: 20,
   name: "Caio",
-  admin: true
+  admin: true,
 });
 ```
 
@@ -196,7 +195,7 @@ it.
 Now, since we are using that arrow function, we can write something as `handleSelect('components')` to pass a string
 identifier to it. That same function must now receive a parameter of the current page to alter its styling
 
-• dot notation or bracket notation for objects? 
+• dot notation or bracket notation for objects?
 
 We had an example, where we had a state named tabContent, and as soon as we clicked on the button "components", that string
 would be assigned to the tabContent state. After that, i would render a dynamic object information based on that key,
@@ -240,9 +239,26 @@ JS interprets the not notation in a literal way
 
 When we do this way. JS replaces the value of the variable tabContent to components, and it will work as expected.
 
+• Constants that hold HTML
 
+We have seen that we could define a let variable with a `<p>` tag, and replace the content of that p tag according to the
+state, e.g.
 
+```js
+let selectedTopic = <p>Please select a topic</p>;
 
+/*  In this case, the parentheses on the string is just to improve readability and visual organization. It would also work
+without it */
 
+if (tabContent) {
+  selectedTopic = (
+    <div id='tab-content'>
+      <h3>{EXAMPLES[tabContent].title}</h3>
+      <p>{EXAMPLES[tabContent].description}</p>
+      <pre>{EXAMPLES[tabContent].code}</pre>
+    </div>
+  );
+}
+```
 
-
+And put that at the place we were outputing that text.
