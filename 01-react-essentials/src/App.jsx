@@ -6,12 +6,23 @@ import { Header } from "./components/Header/Header";
 import TabButton from "./components/TabButton";
 
 function App() {
+  const [tabContent, setTabContent] = useState("");
 
-  const [tabContent, setTabContent] = useState('')
+  let selectedTopic = <p>Please select a topic</p>;
+
+  if (tabContent) {
+    selectedTopic = (
+      <div id='tab-content'>
+        <h3>{EXAMPLES[tabContent].title}</h3>
+        <p>{EXAMPLES[tabContent].description}</p>
+        <pre>{EXAMPLES[tabContent].code}</pre>
+      </div>
+    );
+  }
 
   function handleSelect(selectedButton) {
     // selected button => 'components' | 'jsx' | 'props' | 'state'
-    setTabContent(selectedButton)
+    setTabContent(selectedButton);
   }
 
   return (
@@ -36,20 +47,23 @@ function App() {
         <section id='examples'>
           <h2>Examples</h2>
           <menu>
-            <TabButton onSelect={() => handleSelect('components')}>Components</TabButton>
-            <TabButton onSelect={() => handleSelect('jsx')}>JSX</TabButton>
-            <TabButton onSelect={() => handleSelect('props')}>Props</TabButton>
-            <TabButton onSelect={() => handleSelect('state')}>State</TabButton>
+            <TabButton onSelect={() => handleSelect("components")}>
+              Components
+            </TabButton>
+            <TabButton onSelect={() => handleSelect("jsx")}>JSX</TabButton>
+            <TabButton onSelect={() => handleSelect("props")}>Props</TabButton>
+            <TabButton onSelect={() => handleSelect("state")}>State</TabButton>
           </menu>
-          <div id="tab-content">
-          {tabContent && (
-            <>
-            <h3>{EXAMPLES[tabContent].title}</h3>
-            <p>{EXAMPLES[tabContent].description}</p>
-            <pre>{EXAMPLES[tabContent].code}</pre>
-            </>
-          )} 
-          </div>
+          {!tabContent ? (
+            <p>Please, select a topic</p>
+          ) : (
+            // <div id='tab-content'>
+            //   <h3>{EXAMPLES[tabContent].title}</h3>
+            //   <p>{EXAMPLES[tabContent].description}</p>
+            //   <pre>{EXAMPLES[tabContent].code}</pre>
+            // </div>
+            selectedTopic
+          )}
         </section>
       </main>
     </div>
