@@ -521,5 +521,10 @@ const User: Email = {
   __brand: "Email"
 }
 
+### Using for loops inside JSX elements.
 
+It is not possible to use a *for* loop directly inside a JSX code to generate elements. JSX expects that we use functions
+like map to transform arrays into React components. When we try to use a for loop, JSX can't interpret it correctly and
+won't generate the desired elements. 
 
+We must always remember to, when working with JSX, to always use the appropriate methods to iterate over arrays.

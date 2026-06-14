@@ -5,6 +5,8 @@ import { CoreConcept } from "./components/CoreConcepts";
 import { Header } from "./components/Header/Header";
 import TabButton from "./components/TabButton";
 
+console.log(...CORE_CONCEPTS)
+
 function App() {
   const [tabContent, setTabContent] = useState("");
 
@@ -39,7 +41,7 @@ function App() {
           <h2>Core Concepts</h2>
           <ul>
             {CORE_CONCEPTS.map((coreConcept) => (
-              <CoreConcept {...coreConcept} />
+              <CoreConcept key={coreConcept.title} {...coreConcept} />
             ))}
           </ul>
         </section>
@@ -47,12 +49,12 @@ function App() {
         <section id='examples'>
           <h2>Examples</h2>
           <menu>
-            <TabButton onSelect={() => handleSelect("components")}>
+            <TabButton isSelected={selectedTopic === "components"} onSelect={() => handleSelect("components")}>
               Components
             </TabButton>
-            <TabButton onSelect={() => handleSelect("jsx")}>JSX</TabButton>
-            <TabButton onSelect={() => handleSelect("props")}>Props</TabButton>
-            <TabButton onSelect={() => handleSelect("state")}>State</TabButton>
+            <TabButton isSelected={selectedTopic === "jsx"} onSelect={() => handleSelect("jsx")}>JSX</TabButton>
+            <TabButton isSelected={selectedTopic === "props"}  onSelect={() => handleSelect("props")}>Props</TabButton>
+            <TabButton isSelected={selectedTopic === "state"} onSelect={() => handleSelect("state")}>State</TabButton>
           </menu>
           {!tabContent ? (
             <p>Please, select a topic</p>
