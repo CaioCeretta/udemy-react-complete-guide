@@ -178,7 +178,8 @@ We have to use the event standard name, which is onClick.
 ```js
 <TabButton
   isSelected={selectedTopic === "jsx"}
-  onClick={() => handleSelect("jsx")} // Mudamos de onSelect para onClick
+  onClick={() => handleSelect("jsx")} // We've changed onSelect to onClick in order to use the native property when using
+  // the ...rest operator
 >
   JSX
 </TabButton>
@@ -197,3 +198,27 @@ So basically
 
 *Custom Properties*: They must be individually destructured and treated as named properties in the component's arguments
 *Native Properties*: These ones can be left for the rest operator, because the HTML will automatically spread them.
+
+## Component return
+
+React components doesn't have a fixed "type" like div or fragment, it just needs to return **a single React element**.
+
+For example, we usually may create components, like a Card component that returns a div that wraps other elements, or fragments.
+
+In those cases, the root element happens to be a <div> or <>. But it could just as well be an `<input>`;
+
+```js
+function EmailInput() {
+  return <input type="email" />
+}
+```
+
+or textareas, or even other custom components. If we have something as
+
+```js
+function TextField({ multiline }) {
+  return multiline ? <textarea /> : <input />
+}
+```
+
+When react renders `TextField`, it will end up rendering an input or textarea. Not needing to be exactly a wrapper.
