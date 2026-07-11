@@ -186,3 +186,14 @@ We have to use the event standard name, which is onClick.
 
 This way `...props` retrieves the onClick received from the parent and automatically adds it in the button tag, allowing,
 in the future, passing other native properties like `disabled`, `id`, and more.
+
+## This means that we can't use non native properties when spreading? 
+
+The answer is yes, a golden rule and bast practice when working with reusable components in React is that we have to separate
+what is customized in named properties and what is native to the HTML inside ...props. This is excellent, because it prevents
+other developers to "stain" the HTML with invalid attributes.
+
+So basically
+
+*Custom Properties*: They must be individually destructured and treated as named properties in the component's arguments
+*Native Properties*: These ones can be left for the rest operator, because the HTML will automatically spread them.
