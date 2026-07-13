@@ -222,3 +222,37 @@ function TextField({ multiline }) {
 ```
 
 When react renders `TextField`, it will end up rendering an input or textarea. Not needing to be exactly a wrapper.
+
+## More refactoring Tips
+
+We already have the Section component to reutilize where we were wrapping divs with titles, ids, and more
+
+Now, we must look at one general case we may face. We have, inside the Examples.jsx, we can see that each TabButton is a
+combination of having a menu bar with tab buttons, and then the tab content below that menu bar.
+
+There is nothing wrong with this, it is working just fine. But in bigger apps it would not be unreasonable to assume that
+we might have different places in the app where tabs like these might be used. And it would be interesting to make this
+dynamic, and this means that we might want a reusable Tabs component
+
+A tab consist of a menu and the content beneath it. Let's take a look at a possible flow of thinking:
+
+Our Examples component renders a set of TabButtons based and based on the selected item, it will render the content based
+on that key.
+
+We can define a new Tabs component which will be created to be a reusable abstraction for any interface based on tabs.
+Its objective is to provide visual structure and component interaction, without knowing details of the business logic or
+application data.
+
+It had some thought processes which consisted of
+
+### Who must be responsible for each information?
+
+The answer was separating the responsibilities between the parent component and the Tabs component
+
+### Responsibilities of the parent
+
+
+
+
+
+
