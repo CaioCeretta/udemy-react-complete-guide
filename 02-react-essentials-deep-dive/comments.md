@@ -251,6 +251,37 @@ The answer was separating the responsibilities between the parent component and 
 
 ### Responsibilities of the parent
 
+The parent component is responsible for all the application logic. It knows
+
+• Which tabs will exist
+• Which one is the selected tab
+• What should happen when a tab is selected
+• How the content of each tab is built
+
+It is the parent who decides. For example, if the content will be a text, a form, a table, a graph or any other type of
+React component. After building this content, it sends it to the Tabs via prop
+
+### Tabs responsibilities
+
+Tabs is responsible for presentation and interaction with the tabs interface. It:
+
+• Receives the list of tabs;
+• Renders a TabButton for each one of them
+• Visually identifies which tab is selected
+• Notifies the parent component when a tab is clicked
+• Renders the received content
+
+It is important to notice that Tabs does not know the content structure that is being rendered. It only receives a React
+element and position it inside its structure. This means that it does not know if it is displaying a simple paragraph, a
+list of products, a form, an image gallery or any other component.
+
+This decision makes the `Tabs` independent of the app business rule. Since it does not have any knowledge of the data, nor
+the way that the content is built, the same component can be reused in different contexts without the need of modifications.
+
+This abstraction follows the "separation of responsibilities" principle: the parent component controls the data, the state
+and the application logic, while the component Tabs is responsible for organizing the interface, managing the tabs interaction
+and displaying the content which has been provided to it — tabs render the content, but does not produce it.
+
 
 
 
