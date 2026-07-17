@@ -282,8 +282,37 @@ This abstraction follows the "separation of responsibilities" principle: the par
 and the application logic, while the component Tabs is responsible for organizing the interface, managing the tabs interaction
 and displaying the content which has been provided to it — tabs render the content, but does not produce it.
 
+#### Instructor Thoughts on This
 
+1. Used the children property to display the content below the tabs. 
+2. Used the parent component to manage the content, not the Tabs component, because the idea behind this component is to
+use it in all kind of tabs in all places of the app
+3. Tabs is a dumb component, meaning the it does not know anything about the content it is managing
+4. Moving the tabs we are handling in the select to the tabsComponent, will cause some difficulties, because he now would
+have to accept extra props (the approach i took), where he gets the selected topic, the onSelect prop that is triggered
+whenever a tab is clicked, and more. Adding these extra properties does not only adds another layer of complexity but
+also makes tabs less reusable because he could'nt use the component in a place where he is not managing topics and something
+totally different. Instead, he preferred to leave the tabButtons inside the Examples.jsx file and to pass them as JSX
+code to the Tab element just as he chose to pass it in the children of the Tabs element just as he did with the content.
+5. The problem is, that inside the Tabs component, it receive only one children property, we could'nt use two different
+properties, one to be inside the <menu> tag and the other outside of it, which would need an additional property to get
+the buttons that should be inserted within those <menu>s. Meaning that we would need an additional slot for the JSX
+code, adding an additional property like `buttons` and simply outputting them
+6. This would lead us to pass a property for the Tabs, which will be the `buttons` property, where we would pass all
+the tabs the <menu> should render. And in React, we can pass JSX code to an element property, because in the end, they
+are just regular values that can be used like values in our code.
+7. Using a single root element, in this case a fragment, we are able to pass multiple sibling TabComponents under that
+element, and we will be able to use those two separate slots.
+8. In the end, with both of these slots defined in the Tabs component, and we will have a very "lean" tabs wrapper that
+will enforce the desired structure.
 
+I personally prefer the approach i took in order to solve the same problem. Because this approach would still keep the
+parent component very extensive, which is a "problem" that a reusable component solves.
 
+##### Using JSX
+
+As we have previously learned, we can use JSX as a value in most places we desire, no matter if that place is the value
+being returned in the component or a value being stored in a variable. We only have to make sure that there is only one
+root element in that place. Meaning we can wrap it on a div, or a fragment.
 
 
