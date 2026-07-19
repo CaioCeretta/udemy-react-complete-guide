@@ -44,7 +44,7 @@ export function Examples() {
 
   return (
     <Section name={"examples"} title={"Examples"} id="examples">
-      <Tabs onSelectTab={handleSelect} selectedTab={selectedKey} tabs={tabs} tabContent={tabContent}/>
+      <Tabs onSelectTab={handleSelect} selectedTab={selectedKey} tabs={tabs} tabContent={tabContent} buttonsContainer="menu" />
     </Section>
   );
 }

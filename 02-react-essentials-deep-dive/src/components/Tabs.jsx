@@ -1,9 +1,11 @@
 import TabButton from "./TabButton";
 
-export default function Tabs({ tabs, selectedTab, onSelectTab, tabContent }) {
+export default function Tabs({ tabs, selectedTab, onSelectTab, tabContent, buttonsContainer }) {
+  const ButtonsContainer = buttonsContainer;
+
   return (
     <>
-      <menu>
+      <ButtonsContainer>
         {tabs.map((tab) => (
           <TabButton
             isSelected={selectedTab === tab.key}
@@ -13,7 +15,7 @@ export default function Tabs({ tabs, selectedTab, onSelectTab, tabContent }) {
             {tab.label}
           </TabButton>
         ))}
-      </menu>
+      </ButtonsContainer>
       { tabContent }
     </>
   );

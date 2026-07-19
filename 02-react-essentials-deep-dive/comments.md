@@ -282,7 +282,7 @@ This abstraction follows the "separation of responsibilities" principle: the par
 and the application logic, while the component Tabs is responsible for organizing the interface, managing the tabs interaction
 and displaying the content which has been provided to it — tabs render the content, but does not produce it.
 
-#### Instructor Thoughts on This
+#### Instructor Thoughts on This (Multiple Slots)
 
 1. Used the children property to display the content below the tabs. 
 2. Used the parent component to manage the content, not the Tabs component, because the idea behind this component is to
@@ -315,4 +315,49 @@ As we have previously learned, we can use JSX as a value in most places we desir
 being returned in the component or a value being stored in a variable. We only have to make sure that there is only one
 root element in that place. Meaning we can wrap it on a div, or a fragment.
 
+### Component Types Dynamically
+
+With the Tabs component added, there is other thing we might want to do with that component and utilize another pattern/concept,
+which is related to the menu element. In the tabs component, we might want to wrap the buttons with a `</ menu>` but we
+can also make it a little bit more flexible by creating different wrapper elements around our buttons. 
+
+On the instructor's approach, one way is to wrap the TabButtons's buttons property with a <menu> element.
+
+But a different way, that is maybe more elegant, is to keep using that `<menu>` element as a wrapper on the Tabs element,
+because it also ensures the separation between buttons and content is always applied, but we might want to allow the
+developer to choose which wrapper element should be used if the `Tabs` component is used in different places of the app.
+
+For that, we can use a different prop named something like `buttonsContainer`, to use it as an element to be used as a
+wrapper. So that in the Examples.jsx, we can go to the `Tabs` component and set the `buttonsContainer` as `<menu>`.
+
+But here we have a problem, even though we are receiving the buttonsContainer as a prop, we wouldn't be able to use it
+like we were using the <menu> out of the box, like
+
+<buttonsContainer></buttonsContainer>
+
+because this way, js would look for a built-in component named buttonsContainer, and it does not exist. What we should
+do instead, in order to use it, is defining a new variable, that starts with a capital case character, and store the value
+of that property in it. Because this way, it can be used as a custom component because it starts with an uppercase letter.
+Now, React will take a look in the value stored in `ButtonsContainer` that will be the value received by that property
+and it will then either see that it is a string and in that case it will try to look  for a built in component that can
+be identified by that string value or if we, instead pass a custom component like a Section, react will also recognize
+that and see that we're not trying to output a built in component, but instead trying to display a custom component, and
+it will render that component function.
+
+We could also have taken a shortcut, and instead of remapping the lower case property to a new constant, we could have
+simply accepted a property that starts with uppercase letter.
+
+This concept is simply about receiving a component identifier as a value for a prop, and we need to remember that:
+
+1. That prop then must be usable as a custom component in the receiving component, starting with a uppercase character
+2. That when this comes to these identifiers we use string names for the built in elements, and for custom function
+components we wrap in curly braces, we are not calling the function or using it with angle brackets, we are just using
+the name as a reference.
+
+#### Custom components passed as a prop to a child component
+
+If we, instead of passing a menu element, chose to pass the `Section` component, these custom elements must be passed as
+a dynamic value, in {} and the function name, e.g. `buttonsContainer={Section}`. But for built in elements like `<menu>`
+we don't have to do such thing, since it would look for a variable named `menu` in our code and try to pass the value
+stored as a value to the buttonsContainer.
 
