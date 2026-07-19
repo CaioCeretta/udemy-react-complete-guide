@@ -361,3 +361,12 @@ a dynamic value, in {} and the function name, e.g. `buttonsContainer={Section}`.
 we don't have to do such thing, since it would look for a variable named `menu` in our code and try to pass the value
 stored as a value to the buttonsContainer.
 
+### Default Prop Values
+
+We can use as an example the `buttonsContainer` prop that accepts a component identifier as a value, and whilst that idea
+is to make that Tabs component highly reusable and configurable. Chances are high that in most cases we want to use a 
+`menu` element as a wrapper for the buttons. In this case, we would call the Tabs component without passing that other
+property, and in that case, the `menu` text should be used as a default.
+
+This can be easily achieved when using that destructuring syntax by adding a equal sign after the prop we are destructuring
+and on the right side of it, set the default value.
