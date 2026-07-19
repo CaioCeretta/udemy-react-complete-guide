@@ -15,8 +15,20 @@ export default function Tabs({ tabs, selectedTab, onSelectTab, tabContent, butto
             {tab.label}
           </TabButton>
         ))}
+        
       </ButtonsContainer>
       { tabContent }
     </>
   );
 }
+
+export function Button({mode, children, Icon, ...rest}) {
+ // Todo: Build this component!
+ return (
+        <button className={`button ${mode}-button`} {...rest}><span className="button-icon"><Icon/></span>{children}</button>
+ )
+ // !!! Important: 
+ // Wrap the icon with a <span className="button-icon"> to achieve the target look
+ // Also wrap the children prop with a <span>
+}
+
