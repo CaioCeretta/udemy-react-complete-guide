@@ -52,3 +52,47 @@ We use use `public/` folder for any images that should not be handled by the bui
 available. Good candidates are images used in the `index.html` file or favicons.
 
 On other hand, images that are used inside components should typically be stored in the `src/` folder (e.g. in `src/assets/`)
+
+## Initial App.jsx component
+
+We will start by creating the overall structure of this component.
+
+The main tic-tac-toe game will consist of a main where we have the `Player`, the `Game Board` inside a div and outside of
+that div, the logs of that game
+
+The players will consist of a `ol` element, because the order matters.
+
+That `ol` will be styled as a flex container, with no padding and a margin that will separate that component from the top
+and bottom. And be justified between, for both elements to have the same spacing.
+
+## Concept Repetition: Splitting components & Building reusable components
+
+Next to the players li, we will have a Button to edit each player's name. But as we can see, the "exact" same code for each
+player will be repeated. Even though there will be only one repetition. In order to make the code clearer and easier to
+maintain. We should create a component for this, and only change the properties
+
+## Concept Repetition: Working with state
+
+Now, what we will do is to show an input field, whenever the Edit button is clicked.
+
+Here i had two approaches
+
+### My Approach
+
+I've created two states, one named isEditing, and the other playerName
+
+The approach i took was to, whenever clicking on the edit button, changing the isEditing state to true, which would lead
+to the input being displayed. Then, based on that input element, whatever was being typed would change the playerName
+state, based on a onChange property
+
+To keep the reference from the input being passed. in the span that displayed the player's name, i would use
+
+{ name || playerName}. Which means that, use the name received as property in case the name wasn't edited.
+
+### Instructor's Approach
+
+The instructor didn
+
+
+## Component Instances: Work in Isolation
+
