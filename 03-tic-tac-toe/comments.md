@@ -91,8 +91,85 @@ To keep the reference from the input being passed. in the span that displayed th
 
 ### Instructor's Approach
 
-The instructor didn
+The instructor chose to have only one isEdition state, and then a variable that would be dynamic and define the text
+of the span, which is
 
+instead of doing something like <span ...>{name || playerName} </span> as i did, was to define a new variable, that based
+on the isEditing state would display an input or a the actual value.
+
+It was to show that we can hold jsx values inside variables. Then, on the span's name block, utilize that variable we
+have just created
 
 ## Component Instances: Work in Isolation
+
+As we can see in the application, if we click on edit, we show the input field, but the other player component remains
+the same.
+
+This detail is important because we are showing the same player component, but whenever we are using or reusing a component,
+React will basically create a new isolated instance. Even though both of these players use the same component, they work
+totally isolated from each other. If the state in the first player component instance changes, the second player component
+instance does not care about that at all, it does'nt even know about that.
+
+Meaning we have a shared component with the same logic inside of it, but once we use that component, totally isolated
+instances are created, which only uses the same logic, but they then use it on their own.
+
+Having this isolation allows us to build complex reusable components that don't interfere with each other
+
+## Conditional Content & A Suboptimal Way of Updating State
+
+We can choose to determine the button's text based on a variable that will be dynamic according to the isEditing state
+or utilize a ternary on the button text, that will also be dynamic according to the state. But we'll stick to the ternary
+option
+
+If we wish to use the `name` as a value for the input value prop. By clicking on edit and with the input showing, we will
+see that is pre populated with the name prop. However, here we would clash with a concept named `Controlled Components`
+
+### Controlled Components
+
+In the traditional HTML, a `<input>` maintains and manages its own state. However, in React, when we define the `value`
+property of an input, React takes full control over what is displayed there. React becomes the only "source of truth"
+
+If we do something like
+
+<input type="text" value={props.value} />
+
+When we try to type anything, the browser will notify React: "The user typed the letter A". However, since there is no
+`onChange` function to update the variable being passed, React will look to the `props.value` and say "The value must be
+what is on the prop". And it enforces the input to go back to the original value instantly, which would cause us to think
+that the input is "locked".
+
+#### Common assumption
+
+We know that a component re-renders whenever a state changes or a parent property changes. And since there is no onChange
+updating a state or calling a parent function to modify the prop, the component doesn't go through a new rendering.
+
+And we may think that this is why we can't type on the input. Because it is not simply like "Nothing tells React that
+the value has changed" when something is typed, but React actively undo our typing.
+
+What happens is a "internal fight" between the browser (Real DOM) and React (Virtual DOM). It works in this order:
+
+
+
+To solve this we have two options
+
+
+#### Solution 1 - Use `defaultValue` (Non-Controlled Component)
+
+If our objective is just filling the input with a initial value, and then allowing the user to freely type without React
+needing to control each typed letter, we should use `defaultValue` instead of `value`
+
+Here the input starts with props.value, but the user can edit freely
+<input type="text" defaultValue={props.value} />
+
+In this case, the input is considered Uncontrolled. React defines the initial value, but then, the DOM takes control of
+what is typed.
+
+#### Solution 2 - Using local state (Controlled Component)
+
+If we need to read what the user is typing in real-time (to make validations, enabling submit button, etc). We have to
+transform that initial prop in a local state using useState and then, the onChange event.
+
+This way, on each typed letter, onChange fires, updates the text state, and React renders again with the new letter, allowing,
+normal typing.
+
 
