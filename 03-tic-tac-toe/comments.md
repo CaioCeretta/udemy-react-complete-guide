@@ -173,3 +173,39 @@ This way, on each typed letter, onChange fires, updates the text state, and Reac
 normal typing.
 
 
+## Game Board
+
+### Initial GameBoard component explanation
+
+In the GameBoard component, we start by defining a constant, consisting of an array, that has three arrays inside of it.
+each of these, will have three items, which is how a tic tac toe board is.
+
+Then, so we don't have to create multiple ol's, li's, we iterate over this game board constant we have just created. The
+iteration is as follows:
+
+```html
+ <ol id="game-board">
+      {initialGameBoard.map((row, rowIndex) => (
+        <li key={rowIndex}>
+          <ol>
+            {row.map((playerSymbol, colIndex) => (
+              <li key={colIndex}>
+                <button>{playerSymbol}</button>
+              </li>
+            ))}
+          </ol>
+        </li>
+      ))}
+    </ol>
+```
+
+This code is doing this
+
+1. The outer <ol> is representing the game board
+2. initialGameBoard.map() iterates over the three arrays inside initialGameBoard. Each array representing one row of the
+board
+3. For each row, a <li> is created containing another <ol>
+4. Inside that row, row.map iterates over each element of the row array. Each element represents a cell (or column in
+position) on the board
+5. For every cell, a <li> with a <button> is rendered, displaying the current player symbol.
+
