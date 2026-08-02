@@ -172,6 +172,86 @@ transform that initial prop in a local state using useState and then, the onChan
 This way, on each typed letter, onChange fires, updates the text state, and React renders again with the new letter, allowing,
 normal typing.
 
+## Reference vs Primitive Values
+
+### What are Primitives?
+
+An example
+
+`var age = 30`
+
+The `age` variable (which we could also use `let` or `const` by the way) stores a number value. The number value is 30.
+Number values are called "primitive values" because they're very simple building blocks of JavaScript apps. 
+
+Other simple building blocks are
+
+var name = "Caio" // strings are also primitives
+var isMale = true // so are booleans
+
+As well as undefined and null are also primitive.
+
+### What are reference types then?
+
+So, we understood that primitives are. And Reference types are objects and arrays
+
+```javascript
+var person = {
+  name: "Caio",
+  age: 30
+}
+
+var hobbies = ['Training', 'Studying']
+```
+
+Here, person is an object, therefore a reference type. It holds properties that in turn have primitive values. This doesn't
+affect the objects being a reference type, though. And we could also have nested objects or arrays inside of other objects
+like `person` object.
+
+The hobbies array are also a reference type, and in this case, it holds a list of strings which is in turn, is a primitive.
+But arrays remain being primitives.
+
+### What is the difference?
+
+The difference is relate to memory management
+
+Behind the scenes, JS has to store the values we are assign, and they are either `Stack` or the `Heap`.
+
+## Stack vs Heap
+
+In Java or C#, value types (primitives) are stored on the stack, reference types on the heap. Local variables have automatic
+storage duration and compiler store them on the stack. Objects with dynamic memory allocation (created with `new`) are stored
+on the free store, conventionally referred as the heap. In languages that are not garbage-collected, objects on the heap
+lead to memory leaks if they are not freed. Imagine a stack being a stack of plates ordered on top of each other, and the
+heap being multiple plates with no particular order.
+
+When we can allocate *objects on the stack*? One important detail is that:
+*the stack for storing objects is the same as the run-time call stack*
+
+The run-time stack, consisting of stack frames, is responsible for program execution and function calls. A stack frame
+contains all the data for one-function call: Its parameters, the return address, and its local variables. Stack-allocated
+objects are part of these local variables. The return address determines which code is executed after the function returns.
+
+The stack frame only exists during the execution time of a function, and so do the objects on the stack frame. That has the
+advantage that we do not need to worry about memory leaks caused by stack-allocated objects, but the objects are also not
+available anymore once we return from the function.
+
+Only objects of fixed size known at compile time can be allocated on the stack. This way we know the size of a stack frame
+at compile time, and can access objects on the stack with fixed offsets relative to the stack pointer
+
+Visualize like this
+
+### Understanding the Call Stack Frame
+
+1. The stack grows downwards, as new items are added to the stack, they are placed at decreasing memory addresses
+2. The stack pointer is a critical register that always points to the top of the stack, which is actually the lowest memory
+address currently in use
+
+#### Phase 1: The timeline of a function call
+
+When Function P (the caller) dec
+
+
+
 
 ## Game Board
 
@@ -204,8 +284,41 @@ This code is doing this
 1. The outer <ol> is representing the game board
 2. initialGameBoard.map() iterates over the three arrays inside initialGameBoard. Each array representing one row of the
 board
-3. For each row, a <li> is created containing another <ol>
-4. Inside that row, row.map iterates over each element of the row array. Each element represents a cell (or column in
+1. For each row, a <li> is created containing another <ol>
+2. Inside that row, row.map iterates over each element of the row array. Each element represents a cell (or column in
 position) on the board
-5. For every cell, a <li> with a <button> is rendered, displaying the current player symbol.
+1. For every cell, a <li> with a <button> is rendered, displaying the current player symbol.
+
+### Updating the gameBoard onClick
+
+We could simply do something like
+
+```js
+  function handleSelectSquare(rowIndex, colIndex, playerSymbol) {
+    setGameBoard(prevGameBoard => {
+      prevGameBoard[rowIndex][colIndex] = playerSymbol
+
+      return prevGameBoard
+
+    });
+  }
+```
+
+We could this, but this approach is not recommended in React. Why? 
+
+Instead just as we should use this state updating function when updating our state based on our previous state, its also
+strongly recommended that if our state is an object or array, we update that state in an immutable way. Which simply means
+that we create a copy of thar old state and then we just change that copy instead of the existing object/array/
+
+The reason for that recommendation is that if our state is an object or an array, we are dealing with a reference value
+in JS, and if we update like that way above, we would be updating the old value in memory immediately even before that
+schedule update was executed by React.
+
+This can lead to strange bugs or side effects if we have multiple places in our application that are scheduling state
+updates for the same state.
+
+So here what we should do is creating a new constant or variable, which is a new array where we paste all the existing
+elements of the old array.
+
+
 
