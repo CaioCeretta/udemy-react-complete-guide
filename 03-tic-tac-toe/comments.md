@@ -218,39 +218,56 @@ Behind the scenes, JS has to store the values we are assign, and they are either
 
 ## Stack vs Heap
 
-In Java or C#, value types (primitives) are stored on the stack, reference types on the heap. Local variables have automatic
-storage duration and compiler store them on the stack. Objects with dynamic memory allocation (created with `new`) are stored
-on the free store, conventionally referred as the heap. In languages that are not garbage-collected, objects on the heap
-lead to memory leaks if they are not freed. Imagine a stack being a stack of plates ordered on top of each other, and the
-heap being multiple plates with no particular order.
+In JS and in most programming languages, the memory is mainly divided in two areas: Stack and Heap. The main difference
+between them is how the data is stored and the type of data they hold.
 
-When we can allocate *objects on the stack*? One important detail is that:
-*the stack for storing objects is the same as the run-time call stack*
+In JS they work as the following:
 
-The run-time stack, consisting of stack frames, is responsible for program execution and function calls. A stack frame
-contains all the data for one-function call: Its parameters, the return address, and its local variables. Stack-allocated
-objects are part of these local variables. The return address determines which code is executed after the function returns.
+### 1. Stack (Pile of Memory)
 
-The stack frame only exists during the execution time of a function, and so do the objects on the stack frame. That has the
-advantage that we do not need to worry about memory leaks caused by stack-allocated objects, but the objects are also not
-available anymore once we return from the function.
+Think of the Stack as a organized pile of plates. It is quick, structured, and has a fixed size. The computer knows exactly
+how much space an item will take even before the code running (static allocation). It follows the LIFO principle
 
-Only objects of fixed size known at compile time can be allocated on the stack. This way we know the size of a stack frame
-at compile time, and can access objects on the stack with fixed offsets relative to the stack pointer
+What JavaScript stores in here:
 
-Visualize like this
+° Primitive Types: Simple and with fixed size data, this includes `String`, `Number`, `Boolean`, `Undefined`, `Null`, `Bigint`
+and `Symbol`
+° References (Pointers): Memory addresses that point to where the most complex objects are stored in the Heap
 
-### Understanding the Call Stack Frame
+### 2. Heap ("Mount")
 
-1. The stack grows downwards, as new items are added to the stack, they are placed at decreasing memory addresses
-2. The stack pointer is a critical register that always points to the top of the stack, which is actually the lowest memory
-address currently in use
+Think of the Heap as a large messy storage where we can store boxes of any size. It is used for dynamic data, which the size
+can increase or decrease, while the program is running, and the computer doesn't yet knows its size.
 
-#### Phase 1: The timeline of a function call
+What JavaScript stores here:
 
-When Function P (the caller) dec
+° Reference types: Complex data like Objects ({}), Arrays([]) and functions.
 
+### How do they work together in practice
 
+A common example to illustrate the difference is
+
+```javascript
+
+  // 1. Primitive type
+
+  let name = "Caio";
+  let age = 30;
+
+  // 2. Reference type
+
+  let user = {
+    name: "Alex",
+    age: 38
+  }
+```
+
+What happens behind the scenes:
+
+1. When we create `let name = "Caio"`, JS sees a text that is a string (primitive). It goes direct to the Stack and stores
+the value "Caio" in there.
+
+2. When we create `let user = {...}`, JS sees an object. Objects can grow, so it creates it on the Heap
 
 
 ## Game Board
