@@ -269,6 +269,120 @@ the value "Caio" in there.
 
 2. When we create `let user = {...}`, JS sees an object. Objects can grow, so it creates it on the Heap
 
+## Strange Behavior on Reference Types
+
+The fact that only pointers are stored on the stack for reference types matter a lot!
+
+### What's actually stored in the `person` variables in th following snippet?
+
+`var person = { name = "Caio"}`
+
+Is it
+a) The object?
+b) The pointer to the object
+c) A pointer to the name property?
+
+The answer is b. A pointer to the person object is stored in the variable. The same would be the case for `hobbies` array.
+
+### What does the following code spit out then?
+
+```js
+var person = { name: "Caio" }
+var newPerson = person
+newPerson.name = "Alex"
+console.log(person.name)
+```
+
+In this case, we see Alex on the console. Why? Because we never copied the person object itself to newPerson. We only
+copied its pointer.
+
+It still points to the same object address in memory. Hence, changing newPerson.name also changes person.name because
+newPerson points at the exact same object.
+
+This is the same for arrays.
+
+```
+var hobbies = ['Gym', 'Gaming'];
+var copiedHobbies = hobbies;
+copiedHobbies.push("Music");
+console.log(hobbies[2]) // Prints out Music
+```
+
+This is also because copiedHobbies points to the exact same address as hobbies in memory.
+
+### So how can we copy the exact same value?
+
+Now that we know that we are only copying the pointer, how can we actually copy the value behind the pointer? The actual
+object or array?
+
+We basically need to construct a new object or array and immediately fill it with the properties or elements of the old
+object or array.
+
+We have multiple ways of doing this, also depending on which kind of JS version we are using during development
+
+#### Here are some of the most popular approaches for arrays
+
+##### For Arrays: 
+
+1. Use the slice() method.
+
+```javascript
+  var hobbies = ["Sports", "Gym"]
+  var copiedHobbies = hobbies.slice()
+```
+
+It basically returns a new array which contains all elements of the old element, starting at the starting index we passed,
+and then up to the max number we define. If we simply call `slice()`, without arguments, we get a new array with all elements
+of the old array.
+
+2. Using the spread operator
+
+```javascript
+  var hobbies = ["Sports", "Gym"]
+  var copiedHobbies = [...hobbies]
+```
+
+Here we are creating a new array, (manually by using []), and then the spread operator to pull all elements of the old
+array out, and add them into the new array
+
+##### For Objects
+
+1. Object.assign()
+
+We can use the `Object.assign()` syntax.
+
+```js
+  var person = { name: "Max" }
+  var copiedPerson = Object.assign({}, person)
+```
+
+This syntax creates a new object (the {} part) and assigns all properties of the old object (the second argument) to that
+newly created one. This creates a copy
+
+2) Spread operator
+
+`var copiedPerson = {...person}`
+
+This will also create a new object, because we used ({}) and will then pull all properties of `person` out of it, into the
+brand-new object
+
+##### Some differences
+
+Even though the spread operator act basically the same, the way it is extracted is a bit different.
+
+If we have an array, and log its content with something like console.log({...hobbies}), it would then print out each of
+value as individual argument, some it would simply print out different values separated by spaces.
+
+Objects, on other hand, if we try to, directly spread the properties inside a console.log, it would print out a warning
+saying that `user is not iterable`. 
+
+When spreading an object, it is required for that spread to occur inside a curly braces, because
+
+. Arrays are built-in iterables, meaning Javascript knows how to loop through them item by item when they are spread
+. Plain JS objects are not iterable by default. JavaScript doesn't inherently know whether we want to spread keys, values,
+or entries, so it throws a TypeError. 
+
+
 
 ## Game Board
 
@@ -290,7 +404,7 @@ iteration is as follows:
                 <button>{playerSymbol}</button>
               </li>
             ))}
-          </ol>
+          </ol> 
         </li>
       ))}
     </ol>
