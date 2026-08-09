@@ -474,6 +474,9 @@ or arrays. It is the ideal standard for React state in simple components (ex. Up
 state) and is completely sure that accidental mutations in the internal levels would lead to hard to track bugs.
 
 
+
+
+
 ## Game Board
 
 ### Initial GameBoard component explanation
@@ -535,12 +538,53 @@ The reason for that recommendation is that if our state is an object or an array
 in JS, and if we update like that way above, we would be updating the old value in memory immediately even before that
 schedule update was executed by React.
 
-This can lead to 
- bugs or side effects if we have multiple places in our application that are scheduling state
+This can lead to bugs or side effects if we have multiple places in our application that are scheduling state
 updates for the same state.
 
-So here what we should do is creating a new constant or variable, which is a new array where we paste all the existing
-elements of the old array.
+Mutating state directly does cause unpredictable bugs and hard-to-track side effects when state is shared, but the main
+reason React "forbids" this is because of the immutability and re-rendering detection.
+
+So here what we should do is creating a new constant or variable, which is a new array where we can use the spread operator
+to paste in all the existing elements of the old array.
 
 
 
+## Core Reasons for avoiding direct update change
+
+### 1. The Core React Reason: Reference equality and Re-renders
+
+React determines whether a component needs to re-render by comparing the reference of the old state to the new state using
+strict equality (oldState === newState).
+
+. When we do something like `prevGameBoard[rowIndex][colIndex] = "X"`, we are mutating the *existing* array in memory.
+. When we `return prevGameBoard`. The reference hasn't changed, React looks at it and thinks: "The state is the exact 
+same reference, so nothing changed", and it may skip re-rendering the UI, leaving the screen out of sync with our data.
+
+### 2. The Shared State Reason (The one previously talked about)
+
+. Side Effects: If another component or a custom hook holds a reference to that same `gameBoard` array, changing it in
+place means we are mutating data "behind the scenes" without React knowing
+. Debugging Nightmare: It violates the principle of predictable state management. It makes features like "Undo/Redo" or
+time-travel debugging impossible because history states will point to the same mutated object.
+
+### The Correct (Immutable) Way
+
+To fix this, we must create a shallow copy or deep copy of the array/object before modifying it.
+
+```js
+function handleSelectSquare(rowIndex, colIndex) {
+  setGameBoard(prevGameBoard => {
+    // 1. Create a new copy of the outer array and inner arrays
+    const updatedBoard = prevGameBoard.map(innerArray => [...innerArray]);
+    
+    // 2. Safely mutate the copy
+    updatedBoard[rowIndex][colIndex] = 'X';
+    
+    // 3. Return the new reference
+    return updatedBoard;
+  });
+}
+```
+
+By doing this, `updatedBoard` has a brand-new memory reference, telling React: "The state has changed, please re-render
+the UI"
