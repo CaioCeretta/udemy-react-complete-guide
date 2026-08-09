@@ -269,7 +269,8 @@ the value "Caio" in there.
 
 2. When we create `let user = {...}`, JS sees an object. Objects can grow, so it creates it on the Heap
 
-## Strange Behavior on Reference Types
+## "
+" Behavior on Reference Types
 
 The fact that only pointers are stored on the stack for reference types matter a lot!
 
@@ -382,6 +383,95 @@ When spreading an object, it is required for that spread to occur inside a curly
 . Plain JS objects are not iterable by default. JavaScript doesn't inherently know whether we want to spread keys, values,
 or entries, so it throws a TypeError. 
 
+## Deep Copy
+
+### What is a Deep Copy?
+
+A deep copy runs recursively through all the layers of an object or array (no matter how nested they are) and creates
+new instances of *every* object/array it encounters along the way.
+
+• Shallow Copy: Level 1 is the new, but levels 2, 3+ point to the same place in memory as the original
+• Deep Copy: All the levels are cloned. Modifying an internal object in the copy doesn't affect the original object.
+
+### How to make a deep copy in JS?
+
+#### 1. Native and modern solution
+
+Nowadays, the most recommended, clean way of doing this is by using the global function `structuredClone()`. It was
+introduced for the very purpose of solving this problem without needing to use external libraries.
+
+```js
+  const original = {
+    name: "Caio",
+    address: {
+      city: "Votorantim",
+      cep: "123456-78"
+    },
+    hobbies: ["Studying", "Training"]
+  }
+
+  // Creating the deep copy
+
+  const deepCopy = structuredClone(original);
+
+  // Modifying a deep copy
+  deepCopy.address.city = "São Paulo"
+  deepCopy.hobbies.push("Running")
+
+  console.log(original.address.city) // Votorantim (Didn't Change)
+  console.log(original.hobbies) // [Studying, Training] (Didn't Change)
+  
+
+```
+
+Advantages of using `structuredClone()`
+
+. Accepts primitives, objects, arrays, Date, RegExp, Map, Set, and so on
+. Able to deal even with circular dependencies (Objects that point to itself)
+
+What it doesn't clone
+
+. Functions (If there is a function inside the object, `structuredClone` throws an error)
+. Classes prototypes (returns a plain object, losing the methods of the class)
+
+#### 2. Old and problematic solution: JSON.parse(JSON.stringify()) 
+
+Before `structuredClone`, the  most famous and (classic workaround), was to transform the object in a JSON string and
+then parse it back to an object
+
+`const deepCopy = JSON.parse(JSON.stringify(original))`
+
+But, more than a bad performance for big objects, this method loses data
+
+. undefined, functions and symbols (Symbol) are completely ignored/lost
+. `Date` type objects become strings
+. Values such as `NaN`, `Infinity` become `null`
+
+#### 3. External libraries (lodash)
+
+In case we are working in a project that already uses utility libraries, Lodash has a very robust function called
+`cloneDeep`
+
+```js
+  import _ from 'lodash'
+
+  const deepCopy = _.cloneDeep(original);
+```
+
+This way is excellent and widely used on legacy codes or more complex ecosystems, but if our project is modern, `structuredClone`
+most of the times, dismisses the need to install an external library for this.
+
+### When do we really need a Deep Copy?
+
+Not every time we must use a Deep Copy. Creating deep copies consumes more processing and memory, because JS needs to
+allocate space for each cloned sub-object
+
+Therefore:
+
+• Use Shallow Copy (...) when: Our objects are plain (flat), in other words, don't have properties that are nested objects
+or arrays. It is the ideal standard for React state in simple components (ex. Updating a level 1 property)
+• Use Deep Copy when: We need to modify deeply nested data (like a complex config object, a highly hierarchical global
+state) and is completely sure that accidental mutations in the internal levels would lead to hard to track bugs.
 
 
 ## Game Board
@@ -445,7 +535,8 @@ The reason for that recommendation is that if our state is an object or an array
 in JS, and if we update like that way above, we would be updating the old value in memory immediately even before that
 schedule update was executed by React.
 
-This can lead to strange bugs or side effects if we have multiple places in our application that are scheduling state
+This can lead to 
+ bugs or side effects if we have multiple places in our application that are scheduling state
 updates for the same state.
 
 So here what we should do is creating a new constant or variable, which is a new array where we paste all the existing
