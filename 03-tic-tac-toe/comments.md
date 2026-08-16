@@ -8,7 +8,7 @@ while building this game.
 ## Initial Comments
 
 Instead of defining the initial HTML inside the App.jsx, we are going to grab that code we would add inside the App
-component and add it into the index.html. 
+component and add it into the index.html.
 
 In the end, that index.html is the file that holds the div with id root and is the one that all of our app is rendered
 inside. But when working with React, we can still add more markup to that file, if we need more markup in there.
@@ -23,9 +23,9 @@ our web application's markup is going to go into our component, and all of our w
 application's logic is also going to go in there. But if we have some static markups,
 some static data like the header, we can put it right into the index.html file.
 
-## public/ Folder 
+## public/ Folder
 
-We can store images in the public/ folder and then *directly reference* them from our index.html or index.css files. The
+We can store images in the public/ folder and then _directly reference_ them from our index.html or index.css files. The
 reason for that is that images (or, in general, files) stored in public/ are made publicly available by the underlying
 project development server & build process. Just like index.html, those files can directly be visited from the browser
 and can therefore also be requested by other files.
@@ -42,11 +42,11 @@ Any files (of any format) stored in `src` (or sub-folders like `src/assets/`) ar
 can't be accessed by website visitors. If we try loading `localhost:5173/src/assets/some-image.jpg`. We get an error.
 
 Instead, files stored in `src/` (and sub-folders) can be used in our code files. Images imported into code files are then
-picked up by the underlying build process, potentially optimized, and kind of *injected* into the `public/` folder right
+picked up by the underlying build process, potentially optimized, and kind of _injected_ into the `public/` folder right
 before serving the website. Links to those images are automatically generated and used in the places where we referenced
 the imported images.
 
-### So which folder should we use? 
+### So which folder should we use?
 
 We use use `public/` folder for any images that should not be handled by the build process and that should be generally
 available. Good candidates are images used in the `index.html` file or favicons.
@@ -148,10 +148,7 @@ the value has changed" when something is typed, but React actively undo our typi
 
 What happens is a "internal fight" between the browser (Real DOM) and React (Virtual DOM). It works in this order:
 
-
-
 To solve this we have two options
-
 
 #### Solution 1 - Use `defaultValue` (Non-Controlled Component)
 
@@ -181,7 +178,7 @@ An example
 `var age = 30`
 
 The `age` variable (which we could also use `let` or `const` by the way) stores a number value. The number value is 30.
-Number values are called "primitive values" because they're very simple building blocks of JavaScript apps. 
+Number values are called "primitive values" because they're very simple building blocks of JavaScript apps.
 
 Other simple building blocks are
 
@@ -197,10 +194,10 @@ So, we understood that primitives are. And Reference types are objects and array
 ```javascript
 var person = {
   name: "Caio",
-  age: 30
-}
+  age: 30,
+};
 
-var hobbies = ['Training', 'Studying']
+var hobbies = ["Training", "Studying"];
 ```
 
 Here, person is an object, therefore a reference type. It holds properties that in turn have primitive values. This doesn't
@@ -248,28 +245,28 @@ What JavaScript stores here:
 A common example to illustrate the difference is
 
 ```javascript
+// 1. Primitive type
 
-  // 1. Primitive type
+let name = "Caio";
+let age = 30;
 
-  let name = "Caio";
-  let age = 30;
+// 2. Reference type
 
-  // 2. Reference type
-
-  let user = {
-    name: "Alex",
-    age: 38
-  }
+let user = {
+  name: "Alex",
+  age: 38,
+};
 ```
 
 What happens behind the scenes:
 
 1. When we create `let name = "Caio"`, JS sees a text that is a string (primitive). It goes direct to the Stack and stores
-the value "Caio" in there.
+   the value "Caio" in there.
 
 2. When we create `let user = {...}`, JS sees an object. Objects can grow, so it creates it on the Heap
 
 ## "
+
 " Behavior on Reference Types
 
 The fact that only pointers are stored on the stack for reference types matter a lot!
@@ -288,10 +285,10 @@ The answer is b. A pointer to the person object is stored in the variable. The s
 ### What does the following code spit out then?
 
 ```js
-var person = { name: "Caio" }
-var newPerson = person
-newPerson.name = "Alex"
-console.log(person.name)
+var person = { name: "Caio" };
+var newPerson = person;
+newPerson.name = "Alex";
+console.log(person.name);
 ```
 
 In this case, we see Alex on the console. Why? Because we never copied the person object itself to newPerson. We only
@@ -323,13 +320,13 @@ We have multiple ways of doing this, also depending on which kind of JS version 
 
 #### Here are some of the most popular approaches for arrays
 
-##### For Arrays: 
+##### For Arrays:
 
 1. Use the slice() method.
 
 ```javascript
-  var hobbies = ["Sports", "Gym"]
-  var copiedHobbies = hobbies.slice()
+var hobbies = ["Sports", "Gym"];
+var copiedHobbies = hobbies.slice();
 ```
 
 It basically returns a new array which contains all elements of the old element, starting at the starting index we passed,
@@ -339,8 +336,8 @@ of the old array.
 2. Using the spread operator
 
 ```javascript
-  var hobbies = ["Sports", "Gym"]
-  var copiedHobbies = [...hobbies]
+var hobbies = ["Sports", "Gym"];
+var copiedHobbies = [...hobbies];
 ```
 
 Here we are creating a new array, (manually by using []), and then the spread operator to pull all elements of the old
@@ -353,14 +350,14 @@ array out, and add them into the new array
 We can use the `Object.assign()` syntax.
 
 ```js
-  var person = { name: "Max" }
-  var copiedPerson = Object.assign({}, person)
+var person = { name: "Max" };
+var copiedPerson = Object.assign({}, person);
 ```
 
 This syntax creates a new object (the {} part) and assigns all properties of the old object (the second argument) to that
 newly created one. This creates a copy
 
-2) Spread operator
+2. Spread operator
 
 `var copiedPerson = {...person}`
 
@@ -375,20 +372,20 @@ If we have an array, and log its content with something like console.log({...hob
 value as individual argument, some it would simply print out different values separated by spaces.
 
 Objects, on other hand, if we try to, directly spread the properties inside a console.log, it would print out a warning
-saying that `user is not iterable`. 
+saying that `user is not iterable`.
 
 When spreading an object, it is required for that spread to occur inside a curly braces, because
 
 . Arrays are built-in iterables, meaning Javascript knows how to loop through them item by item when they are spread
 . Plain JS objects are not iterable by default. JavaScript doesn't inherently know whether we want to spread keys, values,
-or entries, so it throws a TypeError. 
+or entries, so it throws a TypeError.
 
 ## Deep Copy
 
 ### What is a Deep Copy?
 
 A deep copy runs recursively through all the layers of an object or array (no matter how nested they are) and creates
-new instances of *every* object/array it encounters along the way.
+new instances of _every_ object/array it encounters along the way.
 
 • Shallow Copy: Level 1 is the new, but levels 2, 3+ point to the same place in memory as the original
 • Deep Copy: All the levels are cloned. Modifying an internal object in the copy doesn't affect the original object.
@@ -401,27 +398,25 @@ Nowadays, the most recommended, clean way of doing this is by using the global f
 introduced for the very purpose of solving this problem without needing to use external libraries.
 
 ```js
-  const original = {
-    name: "Caio",
-    address: {
-      city: "Votorantim",
-      cep: "123456-78"
-    },
-    hobbies: ["Studying", "Training"]
-  }
+const original = {
+  name: "Caio",
+  address: {
+    city: "Votorantim",
+    cep: "123456-78",
+  },
+  hobbies: ["Studying", "Training"],
+};
 
-  // Creating the deep copy
+// Creating the deep copy
 
-  const deepCopy = structuredClone(original);
+const deepCopy = structuredClone(original);
 
-  // Modifying a deep copy
-  deepCopy.address.city = "São Paulo"
-  deepCopy.hobbies.push("Running")
+// Modifying a deep copy
+deepCopy.address.city = "São Paulo";
+deepCopy.hobbies.push("Running");
 
-  console.log(original.address.city) // Votorantim (Didn't Change)
-  console.log(original.hobbies) // [Studying, Training] (Didn't Change)
-  
-
+console.log(original.address.city); // Votorantim (Didn't Change)
+console.log(original.hobbies); // [Studying, Training] (Didn't Change)
 ```
 
 Advantages of using `structuredClone()`
@@ -434,9 +429,9 @@ What it doesn't clone
 . Functions (If there is a function inside the object, `structuredClone` throws an error)
 . Classes prototypes (returns a plain object, losing the methods of the class)
 
-#### 2. Old and problematic solution: JSON.parse(JSON.stringify()) 
+#### 2. Old and problematic solution: JSON.parse(JSON.stringify())
 
-Before `structuredClone`, the  most famous and (classic workaround), was to transform the object in a JSON string and
+Before `structuredClone`, the most famous and (classic workaround), was to transform the object in a JSON string and
 then parse it back to an object
 
 `const deepCopy = JSON.parse(JSON.stringify(original))`
@@ -453,9 +448,9 @@ In case we are working in a project that already uses utility libraries, Lodash 
 `cloneDeep`
 
 ```js
-  import _ from 'lodash'
+import _ from "lodash";
 
-  const deepCopy = _.cloneDeep(original);
+const deepCopy = _.cloneDeep(original);
 ```
 
 This way is excellent and widely used on legacy codes or more complex ecosystems, but if our project is modern, `structuredClone`
@@ -473,10 +468,6 @@ or arrays. It is the ideal standard for React state in simple components (ex. Up
 • Use Deep Copy when: We need to modify deeply nested data (like a complex config object, a highly hierarchical global
 state) and is completely sure that accidental mutations in the internal levels would lead to hard to track bugs.
 
-
-
-
-
 ## Game Board
 
 ### Initial GameBoard component explanation
@@ -488,47 +479,46 @@ Then, so we don't have to create multiple ol's, li's, we iterate over this game 
 iteration is as follows:
 
 ```html
- <ol id="game-board">
-      {initialGameBoard.map((row, rowIndex) => (
-        <li key={rowIndex}>
-          <ol>
-            {row.map((playerSymbol, colIndex) => (
-              <li key={colIndex}>
-                <button>{playerSymbol}</button>
-              </li>
-            ))}
-          </ol> 
-        </li>
+<ol id="game-board">
+  {initialGameBoard.map((row, rowIndex) => (
+  <li key="{rowIndex}">
+    <ol>
+      {row.map((playerSymbol, colIndex) => (
+      <li key="{colIndex}">
+        <button>{playerSymbol}</button>
+      </li>
       ))}
     </ol>
+  </li>
+  ))}
+</ol>
 ```
 
 This code is doing this
 
 1. The outer <ol> is representing the game board
 2. initialGameBoard.map() iterates over the three arrays inside initialGameBoard. Each array representing one row of the
-board
-1. For each row, a <li> is created containing another <ol>
-2. Inside that row, row.map iterates over each element of the row array. Each element represents a cell (or column in
-position) on the board
-1. For every cell, a <li> with a <button> is rendered, displaying the current player symbol.
+   board
+3. For each row, a <li> is created containing another <ol>
+4. Inside that row, row.map iterates over each element of the row array. Each element represents a cell (or column in
+   position) on the board
+5. For every cell, a <li> with a <button> is rendered, displaying the current player symbol.
 
 ### Updating the gameBoard onClick
 
 We could simply do something like
 
 ```js
-  function handleSelectSquare(rowIndex, colIndex, playerSymbol) {
-    setGameBoard(prevGameBoard => {
-      prevGameBoard[rowIndex][colIndex] = playerSymbol
+function handleSelectSquare(rowIndex, colIndex, playerSymbol) {
+  setGameBoard((prevGameBoard) => {
+    prevGameBoard[rowIndex][colIndex] = playerSymbol;
 
-      return prevGameBoard
-
-    });
-  }
+    return prevGameBoard;
+  });
+}
 ```
 
-We could this, but this approach is not recommended in React. Why? 
+We could this, but this approach is not recommended in React. Why?
 
 Instead just as we should use this state updating function when updating our state based on our previous state, its also
 strongly recommended that if our state is an object or array, we update that state in an immutable way. Which simply means
@@ -547,6 +537,113 @@ reason React "forbids" this is because of the immutability and re-rendering dete
 So here what we should do is creating a new constant or variable, which is a new array where we can use the spread operator
 to paste in all the existing elements of the old array.
 
+## How does a spreading an array in a case like this, where the array is nested, work?
+
+Assume we create the array copy like this: `const updatedBoard = [...prevGameBoard.map(innerArray => [...innerArray])];`
+
+And we know that if we spread over an array, what we get are the elements inside that array.
+
+### 1. What are the values and how they "arrive"?
+
+Consider the following state:
+
+```ts
+prevGameBoard = [ 
+  [null, null, null],
+  [null, null, null],
+  [null, null, null], 
+];
+```
+
+This is not a "two-dimensional array" in JS.
+
+It is actually: `[Array, Array, Array]`
+
+Where each element of that array itself is another array
+
+So during:
+
+`prevGameBoard.map(innerArray => [...innerArray])`
+
+The map iterates through the outer array, so for every iteration, the current element is assigned to the innerArray.
+
+#### The first iteration 
+
+`innerArray = [null, null, null]
+
+Then [...innerArray] spreads the elements into a new array `[null, null, null]`
+
+At first glance, this looks identical to the original one. However, it's a brand new array with new memory reference.
+
+#### Second iteration
+
+Again [null, null, null]
+
+And [...newArray] creates a new identical array, but with different memory reference
+
+#### Third Iteration
+
+Same thing
+
+#### map end
+
+By the end of the map execution, we will get
+
+```js
+[
+[null, null, null],
+[null, null, null],
+[null, null, null]
+]
+```
+
+Which visually looks exactly like the original structure, but every inner array is a new object in memory.
+
+### 2. How is the spread functioning
+
+Suppose we only copy the outer array
+
+const updatedBoard = [...prevGameBoard];
+
+This creates a new outer array.
+
+However, the nested arrays are still the same ones.
+
+Visually, it would be
+
+```js
+prevGameBoard
+│
+├──► Array A
+├──► Array B
+└──► Array C
+
+updatedBoard
+│
+├──► Array A
+├──► Array B
+└──► Array C
+```
+
+Notice that both variables still point to the same inner arrays
+
+Because of that:
+
+`updatedGameBoard[0][0] = "X"`
+
+also changes
+
+`prevGameBoard[0][0]`
+
+Since both references are to the same array, and when we modify any index of the inner array of the outer copy, it will
+also reflect on the original outer array.
+
+### 3. Why map solves this problem?
+
+Now consider:
+
+`const updatedBoard =
+  prevGameBoard.map(innerArray => [...innerArray]);`
 
 
 ## Core Reasons for avoiding direct update change
@@ -556,8 +653,8 @@ to paste in all the existing elements of the old array.
 React determines whether a component needs to re-render by comparing the reference of the old state to the new state using
 strict equality (oldState === newState).
 
-. When we do something like `prevGameBoard[rowIndex][colIndex] = "X"`, we are mutating the *existing* array in memory.
-. When we `return prevGameBoard`. The reference hasn't changed, React looks at it and thinks: "The state is the exact 
+. When we do something like `prevGameBoard[rowIndex][colIndex] = "X"`, we are mutating the _existing_ array in memory.
+. When we `return prevGameBoard`. The reference hasn't changed, React looks at it and thinks: "The state is the exact
 same reference, so nothing changed", and it may skip re-rendering the UI, leaving the screen out of sync with our data.
 
 ### 2. The Shared State Reason (The one previously talked about)
@@ -573,13 +670,13 @@ To fix this, we must create a shallow copy or deep copy of the array/object befo
 
 ```js
 function handleSelectSquare(rowIndex, colIndex) {
-  setGameBoard(prevGameBoard => {
+  setGameBoard((prevGameBoard) => {
     // 1. Create a new copy of the outer array and inner arrays
-    const updatedBoard = prevGameBoard.map(innerArray => [...innerArray]);
-    
+    const updatedBoard = prevGameBoard.map((innerArray) => [...innerArray]);
+
     // 2. Safely mutate the copy
-    updatedBoard[rowIndex][colIndex] = 'X';
-    
+    updatedBoard[rowIndex][colIndex] = "X";
+
     // 3. Return the new reference
     return updatedBoard;
   });
@@ -587,4 +684,4 @@ function handleSelectSquare(rowIndex, colIndex) {
 ```
 
 By doing this, `updatedBoard` has a brand-new memory reference, telling React: "The state has changed, please re-render
-the UI"
+the UI".
