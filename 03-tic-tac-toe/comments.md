@@ -745,3 +745,11 @@ function handleSelectSquare(rowIndex, colIndex) {
 
 By doing this, `updatedBoard` has a brand-new memory reference, telling React: "The state has changed, please re-render
 the UI".
+
+## Lifting State Up
+
+We now have the game board the basic game board we make sure that we actually switch between the two players, so they take
+different turns and that we place the symbol of the player that is currently active when the button is pressed.
+In addition, it's also good that we highlight the player that is active, with a class, for example.
+
+
