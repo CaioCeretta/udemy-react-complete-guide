@@ -548,10 +548,10 @@ And we know that if we spread over an array, what we get are the elements inside
 Consider the following state:
 
 ```ts
-prevGameBoard = [ 
+prevGameBoard = [
   [null, null, null],
   [null, null, null],
-  [null, null, null], 
+  [null, null, null],
 ];
 ```
 
@@ -567,7 +567,7 @@ So during:
 
 The map iterates through the outer array, so for every iteration, the current element is assigned to the innerArray.
 
-#### The first iteration 
+#### The first iteration
 
 `innerArray = [null, null, null]
 
@@ -591,10 +591,10 @@ By the end of the map execution, we will get
 
 ```js
 [
-[null, null, null],
-[null, null, null],
-[null, null, null]
-]
+  [null, null, null],
+  [null, null, null],
+  [null, null, null],
+];
 ```
 
 Which visually looks exactly like the original structure, but every inner array is a new object in memory.
@@ -638,12 +638,72 @@ also changes
 Since both references are to the same array, and when we modify any index of the inner array of the outer copy, it will
 also reflect on the original outer array.
 
-### 3. Why map solves this problem?
+### 3. What exactly is the map returning?
+
+The callback returns
+
+[...innerArray]
+
+For each iteration
+
+Therefore
+
+prevGameBoard.map(innerArray => [...innerArray])
+
+Is conceptually equivalent to
+
+```javascript
+[[...prevGameBoard[0]], [...prevGameBoard[1]], [...prevGameBoard[2]]];
+```
+
+Which becomes
+
+```js
+[
+  [null, null, null]
+  [null, null, null]
+  [null, null, null]
+]
+```
+
+Again the values are identical. The references are not.
+
+### 4. Why does map solves the problem?
 
 Now consider:
 
-`const updatedBoard =
-  prevGameBoard.map(innerArray => [...innerArray]);`
+```js
+const updatedBoard =
+  prevGameBoard.map(innerArray => [...innerArray]);
+```
+
+The outer array is new and every other inner array is also new.
+
+Visually:
+
+prevGameBoard
+│
+├──► Array A
+├──► Array B
+└──► Array C
+ 
+updatedBoard
+│
+├──► Array D
+├──► Array E
+└──► Array F
+
+And when we do something like
+
+`updatedBoard[0][0] = 'X'`
+
+only 'Array D' changes. Array A remains untouched
+
+### TL;DR
+
+When dealing with nest arrays, copying only the outer array is not enough. Every nested array that might be modified must
+also receive a new reference. The map(...) => [...innerArray] pattern is a concise way of creating those new nested references
+while keeping the original state untouched
 
 
 ## Core Reasons for avoiding direct update change
