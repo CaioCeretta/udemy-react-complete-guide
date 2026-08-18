@@ -752,4 +752,45 @@ We now have the game board the basic game board we make sure that we actually sw
 different turns and that we place the symbol of the player that is currently active when the button is pressed.
 In addition, it's also good that we highlight the player that is active, with a class, for example.
 
+But this has one important implication, we need to know it both in the player component as well as on the GameBoard component.
+Because on the GameBoard we need the symbol of the active player, and on the Player we want to dynamically add a CSS class
+to that list item.
 
+But the problem here is that these are two separate components. And how to make sure that both have access to the information
+of which players is currently active? 
+
+Cases like these that are super common we must "lift the state up"
+
+### What is it?
+
+Lift the state up to the closest ancestor component that has access to all components that need to work with that state.
+
+So instead of managing the information of which players is currently active in the GameBoard or the Player component, which
+would not be enough for the reasons mentioned. We need to manage the state in the closest ancestor component
+
+Assume we have a component that holds both components that need the same information. Which in our case, is the App. Because
+the app component can then pass the information both to the GameBoard as well as to the Player via props.
+
+So what we will first do is:
+
+Create a state inside the App component, that will handle the active player. And that function will simply be passed as
+prop to the GameComponent, and every time a user clicks on a square, that function is fired and toggles the active player.
+
+With that we are switching the active player state and we can now do two things
+
+1. Be able to dynamically highlight a player based on the active player state.
+2. Also pass the active player to the gameBoard component, because in the end, the active player is the symbol of the current
+active player, and pass that symbol to that handleSelectSquare function.
+
+Until now, the game is functioning this way.
+
+1. App component, that holds both the players, and the game board, has the activePlayer state that will be shared between
+both components
+2. App component has a function to set the current active player, that function utilizes a ternary to check the current
+player symbol and toggle it when a square is clicked on
+3. GameBoard's handle select square function, receives the current player (which is essentially its symbol) as a prop, and
+use that symbol to update the clicked square. After clicking and updating the square, it will call the parent's function
+that toggles the active player to alter it.
+4. The player component, receives as a prop, the current active player, and dynamically modify its styling.
+
+ 
