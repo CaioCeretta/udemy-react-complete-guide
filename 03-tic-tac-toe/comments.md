@@ -793,4 +793,38 @@ use that symbol to update the clicked square. After clicking and updating the sq
 that toggles the active player to alter it.
 4. The player component, receives as a prop, the current active player, and dynamically modify its styling.
 
+## Avoid Intersecting State
+
+Before we start working on the winning condition or making sure that the same button can't be clicked multiple times. We
+will work on the log that should be displayed below the board.
+
+Because whilst everything might look great right now, we are actually on the edge of writing suboptimal react code,
+specially if we plan to add more features.
+
+### Log component and turns state
+
+This component outputs an ordered list about the different turns we had in our game this far, which turns were taken by
+each player on that given game.
+
+The GameBoard component holds the current state of the game, and which buttons were pressed, but it does not know when
+those buttons were clicked. And we need, for the log, to know the order in which each button took place.
+
+If we would like to create a state of the turns inside the App component, and the current state of the game inside the
+gameBoard component, we would have two states that hold basically the same values, and this is something that we, as react
+developers, should avoid.
+
+Since both the GameBoard, as well as the Log components need basically the same information about the current state of the
+game, it makes sense to remove the state of the current game from the gameBoard component, and start managing it, through
+the app, since it is the one component that has access to both the Log and the Board component. Meaning that the most
+interesting approach, is to add a gameTurns state to the app component.
+
+Now, what we will see, is that we can manage this information about this different buttons clicks as a list and then
+derive both the information we need for the Log as well as the information we need to the GameBoard from the array of
+gameTurns.
+
+
+
+
+
+### Sub Optimal code
  
