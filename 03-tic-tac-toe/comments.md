@@ -822,9 +822,35 @@ Now, what we will see, is that we can manage this information about this differe
 derive both the information we need for the Log as well as the information we need to the GameBoard from the array of
 gameTurns.
 
+Therefore, in the gameBoard component we can get rid of the activePlayerSymbol prop and we use the onSelectSquare prop as
+a value for the onClick button, so we no longer go into managing the game state in that component, and instead, lift it
+up.
+
+Inside the App component, with help of the `onSelectSquare` prop, which we are still passing to `GameBoard` when a button
+is clicked on that component. In short, we are no longer going to manage the game state inside the GameBoard component,
+We will modify the `handleSelectSquare` function to handle both the board state as well as handling the update of our turns
+state.
+
+That array item will be an object, placed as the first item of the array, and as the second value we will spread over the
+current existing turns state, so the list will be populated from more recent to oldest move.
+
+Our turns array, will be an array of objects, where each object will store which player has clicked on the button, and a
+square property which will be an object containing the row/column index it was clicked on. with the final object being
+`square: { square: { row: rowIndex, col: colIndex}, player: activePlayer}`
+
+However, doing this is not optimal, since when we use the activePlayer state inside that other state, we are merging two
+different states, which is not optimal, because since the game is supposed to be updated with the most recent state, we
+don't have the guarantee of the current player state.
+
+A better way, for deriving the symbol of the current active player is to add a new current player variable, is by checking
+the which was the player on the latest index of the gameTurns object.
 
 
 
 
 ### Sub Optimal code
+
+## Prefer computed values & avoid unnecessary state management.
+
+
  
