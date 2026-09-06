@@ -847,7 +847,7 @@ would'nt be able to make sure that hte activePlayer state is consistent to the G
 Therefore, we should create a new variable inside the `setGameTurns()` setter, check the player of the last move, and
 assign to that variable, the opposite of that value. But here is a caveat, the prevTurns array may be 0, and it would lead
 to an error when we try to create our condition of the prevTurns[0].player, since it would not exist. So we will also have
-to check if the length is greather than 0
+to check if the length is greater than 0
 
 
  
