@@ -10,13 +10,14 @@ function App() {
   function handleSelectSquare() {
     setActivePlayer((prevPlayer) => (prevPlayer === "X" ? "O" : "X"));
 
-    let currentPlayer = 'X';
-
-    if(prevTurns.length > 0 && prevTurns[0].player === 'X') currentPlayer = 'O'
-
     setGameTurns((prevTurns) => {
+      let currentPlayer = "X";
+
+      if (prevTurns.length > 0 && prevTurns[0].player === "X")
+        currentPlayer = "O";
+
       const updatedTurns = [
-        { square: { row: rowIndex, col: colIndex }, player: activePlayer },
+        { square: { row: rowIndex, col: colIndex }, player: currentPlayer },
         ...prevTurns,
       ];
     });

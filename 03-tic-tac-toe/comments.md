@@ -818,7 +818,7 @@ game, it makes sense to remove the state of the current game from the gameBoard 
 the app, since it is the one component that has access to both the Log and the Board component. Meaning that the most
 interesting approach, is to add a gameTurns state to the app component.
 
-Now, what we will see, is that we can manage this information about this different buttons clicks as a list and then
+Now, what we will see, is that we can manage the information about this different buttons clicks as a list and then
 derive both the information we need for the Log as well as the information we need to the GameBoard from the array of
 gameTurns.
 
@@ -826,31 +826,28 @@ Therefore, in the gameBoard component we can get rid of the activePlayerSymbol p
 a value for the onClick button, so we no longer go into managing the game state in that component, and instead, lift it
 up.
 
-Inside the App component, with help of the `onSelectSquare` prop, which we are still passing to `GameBoard` when a button
-is clicked on that component. In short, we are no longer going to manage the game state inside the GameBoard component,
-We will modify the `handleSelectSquare` function to handle both the board state as well as handling the update of our turns
-state.
+Now we need to fix the GameBoard component, so it continues working as expected. The handleSelectSquare is the function we
+are passing as a prop from App to GameBoard onclick, but now, instead of just modifying the current player state, we also
+will like to update the turns state, by adding new values to the GameTurns array.
 
-That array item will be an object, placed as the first item of the array, and as the second value we will spread over the
-current existing turns state, so the list will be populated from more recent to oldest move.
-
-Our turns array, will be an array of objects, where each object will store which player has clicked on the button, and a
-square property which will be an object containing the row/column index it was clicked on. with the final object being
-`square: { square: { row: rowIndex, col: colIndex}, player: activePlayer}`
-
-However, doing this is not optimal, since when we use the activePlayer state inside that other state, we are merging two
-different states, which is not optimal, because since the game is supposed to be updated with the most recent state, we
-don't have the guarantee of the current player state.
-
-A better way, for deriving the symbol of the current active player is to add a new current player variable, is by checking
-the which was the player on the latest index of the gameTurns object.
-
-
-
-
-### Sub Optimal code
+The schema of the every turns array that will be added to that array is basically, two nested objects, one is which player
+clicked on the button and the other is one holding in which row it was in, and the column, so that item will be the object.
+Every new object is going to be placed before the current turns object, so the log will show the latest to the oldest move.
 
 ## Prefer computed values & avoid unnecessary state management.
+
+The activePlayer state is not an independent info. It depends explicitly of the match history, and based on the GameTurns
+state, we can define the currentPlayer just by looking in the plays that were made, and currentPlayer state wouldn't have
+to exist.
+
+The fewer state we have, the lower is the risk of inconsistencies. We could think of keeping that currentPlayer state and
+adding that value to the GameTurns's state, but the GameTurns state should store the current state of the game, and we
+would'nt be able to make sure that hte activePlayer state is consistent to the GameTurns state.
+
+Therefore, we should create a new variable inside the `setGameTurns()` setter, check the player of the last move, and
+assign to that variable, the opposite of that value. But here is a caveat, the prevTurns array may be 0, and it would lead
+to an error when we try to create our condition of the prevTurns[0].player, since it would not exist. So we will also have
+to check if the length is greather than 0
 
 
  

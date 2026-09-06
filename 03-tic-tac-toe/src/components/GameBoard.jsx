@@ -1,4 +1,3 @@
-import { useState } from "react";
 
 const initialGameBoard = [
   [null, null, null],
@@ -6,7 +5,7 @@ const initialGameBoard = [
   [null, null, null],
 ];
 
-export default function GameBoard({onSelectSquare }) {
+export default function GameBoard({onSelectSquare}) {
 
   const [gameBoard, setGameBoard] = useState(initialGameBoard)
 
