@@ -837,17 +837,133 @@ Every new object is going to be placed before the current turns object, so the l
 ## Prefer computed values & avoid unnecessary state management.
 
 The activePlayer state is not an independent info. It depends explicitly of the match history, and based on the GameTurns
-state, we can define the currentPlayer just by looking in the plays that were made, and currentPlayer state wouldn't have
+state, we can define the currentPlayer just by looking at the plays that were made, and currentPlayer state wouldn't have
 to exist.
 
 The fewer state we have, the lower is the risk of inconsistencies. We could think of keeping that currentPlayer state and
 adding that value to the GameTurns's state, but the GameTurns state should store the current state of the game, and we
-would'nt be able to make sure that hte activePlayer state is consistent to the GameTurns state.
+would'nt be able to make sure that the activePlayer state is consistent to the GameTurns state.
 
-Therefore, we should create a new variable inside the `setGameTurns()` setter, check the player of the last move, and
-assign to that variable, the opposite of that value. But here is a caveat, the prevTurns array may be 0, and it would lead
+Therefore, we should create a new variable inside the `setGameTurns()` setter, check the the last player to move, and
+assign the opposite to that variable. But here is a caveat, the prevTurns array may be 0, and it would lead
 to an error when we try to create our condition of the prevTurns[0].player, since it would not exist. So we will also have
 to check if the length is greater than 0
 
+## Template Literals Recap
 
+Template literals are literals (in JS, literal is any value that is written directrly on code, without passing by a variable
+or expression) delimited with backtick (`) characters, allowing for multi-line strings, string interpolation
+with embedded expressions, and special constructs called `tagged templates`. 
+
+Template literals are sometimes informally called template strings, because they are used most commonly for `string interpolation`
+(to create strings by doing substitution of placeholders). However, a tagged template literal may not result in a string, 
+it can be used with a custom tag function to perform whatever operations we want on the different parts of the template
+literal.
+
+Syntax is
+
+`string text`
+
+`string text line 1`
+`string text line 2`
+
+`string text ${expression} string text`
+
+'tagFunction`string text ${expression} string text`'
+
+### Parameters
+
+#### string text
+
+The string text that will become part of the template literal. Almost all characters are allowed literallly, including
+line breaks and other whitespace characters. However, invalid escapes sequences will cause a syntax error, unless a tag
+function is used.
+
+#### expression
+
+An expression to be inserted in the current position, whose value is converted to a string or passed to a `tagFunction`
+
+#### tagFunction
  
+ If specified, it will be called with the template strings array and substitution expressions, and the return value becomes
+ the value of the template literal
+
+### Description
+
+They are enclosed with `(`)` backticks characters instead of double quotes or single quotes.
+
+Along with having normal strings, template literals can also contain other parts called `placeholders`, which are embedded
+expressions delimited by dollar sign and curly braces: `${expression}`. The strings and placeholders get passed to a function
+—  either a default function, or a function we supply. The default function (when we don't supply our own) just perform
+string interpolation to do substitution of the placeholders and then concatenate the parts into a single string
+
+To supply a function of our own, precede the template literal with the a function name; the result is called a tagged
+template. In that case, the template literal is passed to our tag function, where we can then perform whatever operations
+we want on the different parts of template literal
+
+ To escape a backtick in a template literal, put a backlash before the backtick
+
+` `\`` === "`" // True
+
+Dollar signs can be escaped as well to prevent interpolation
+
+`\${1}` === "${1}";  === "${1}" // True
+
+### Multi line strings 
+
+Any new line characters inserted in the source are part of the template literal.
+
+Using normal strings, we would have to use the following syntax in order to get multi-line strings:
+
+```javascript
+  console.log("string text line 1\nstring text line 2");
+  // "string text line 1
+  // string text line 2"
+```
+
+Using template literals we can do the same with this
+
+```javascript
+console.log(`string text line 1
+string text line 2`);
+// "string text line 1
+// string text line 2"
+```
+
+Like `normal string literals`, we can write a single-line string across multiple lines for source code readability, by
+escaping newline with a blacklash `\`
+
+```javascript
+  console.log(`string text line 1 \
+  string text line 2`);
+  // "string text line 1 string text line 2"
+```
+
+### String interpolation
+
+WIthout template literals, when we want to combine the output from expressions with strings, we would concatenate them using
+the addition operator '+', but with template literals we can avoid concatenation and improve the readability of our code —
+by using placeholders of the form ${expression} to perform substitutions for embedded expressions
+
+```javascript
+const a = 5;
+const b = 10;
+console.log(`Fifteen is ${a + b} and
+not ${2 * a + b}.`);
+// "Fifteen is 15 and
+// not 20."
+```
+
+
+
+
+
+
+## Sharing State Across Components
+
+We can start by the `Log` component. Which is a component that receives the gameTurns being made.
+
+First we modify that component to accept a `turns` prop, and then map over this turns prop to a list of items. The `Log`
+components will return an ol with the player and the coordinates where it clicked on. Not forgetting the key attribute for
+dynamic lists, and it could be the row/col since it could be selected just once per game.
+  
