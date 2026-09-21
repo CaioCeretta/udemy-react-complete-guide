@@ -659,11 +659,7 @@ Is conceptually equivalent to
 Which becomes
 
 ```js
-[
-  [null, null, null]
-  [null, null, null]
-  [null, null, null]
-]
+[[null, null, null][(null, null, null)][(null, null, null)]];
 ```
 
 Again the values are identical. The references are not.
@@ -673,8 +669,7 @@ Again the values are identical. The references are not.
 Now consider:
 
 ```js
-const updatedBoard =
-  prevGameBoard.map(innerArray => [...innerArray]);
+const updatedBoard = prevGameBoard.map((innerArray) => [...innerArray]);
 ```
 
 The outer array is new and every other inner array is also new.
@@ -686,6 +681,7 @@ prevGameBoard
 ├──► Array A
 ├──► Array B
 └──► Array C
+
  
 updatedBoard
 │
@@ -704,7 +700,6 @@ only 'Array D' changes. Array A remains untouched
 When dealing with nest arrays, copying only the outer array is not enough. Every nested array that might be modified must
 also receive a new reference. The map(...) => [...innerArray] pattern is a concise way of creating those new nested references
 while keeping the original state untouched
-
 
 ## Core Reasons for avoiding direct update change
 
@@ -757,7 +752,7 @@ Because on the GameBoard we need the symbol of the active player, and on the Pla
 to that list item.
 
 But the problem here is that these are two separate components. And how to make sure that both have access to the information
-of which players is currently active? 
+of which players is currently active?
 
 Cases like these that are super common we must "lift the state up"
 
@@ -780,17 +775,17 @@ With that we are switching the active player state and we can now do two things
 
 1. Be able to dynamically highlight a player based on the active player state.
 2. Also pass the active player to the gameBoard component, because in the end, the active player is the symbol of the current
-active player, and pass that symbol to that handleSelectSquare function.
+   active player, and pass that symbol to that handleSelectSquare function.
 
 Until now, the game is functioning this way.
 
 1. App component, that holds both the players, and the game board, has the activePlayer state that will be shared between
-both components
+   both components
 2. App component has a function to set the current active player, that function utilizes a ternary to check the current
-player symbol and toggle it when a square is clicked on
+   player symbol and toggle it when a square is clicked on
 3. GameBoard's handle select square function, receives the current player (which is essentially its symbol) as a prop, and
-use that symbol to update the clicked square. After clicking and updating the square, it will call the parent's function
-that toggles the active player to alter it.
+   use that symbol to update the clicked square. After clicking and updating the square, it will call the parent's function
+   that toggles the active player to alter it.
 4. The player component, receives as a prop, the current active player, and dynamically modify its styling.
 
 ## Avoid Intersecting State
@@ -853,10 +848,10 @@ to check if the length is greater than 0
 
 Template literals are literals (in JS, literal is any value that is written directrly on code, without passing by a variable
 or expression) delimited with backtick (`) characters, allowing for multi-line strings, string interpolation
-with embedded expressions, and special constructs called `tagged templates`. 
+with embedded expressions, and special constructs called `tagged templates`.
 
 Template literals are sometimes informally called template strings, because they are used most commonly for `string interpolation`
-(to create strings by doing substitution of placeholders). However, a tagged template literal may not result in a string, 
+(to create strings by doing substitution of placeholders). However, a tagged template literal may not result in a string,
 it can be used with a custom tag function to perform whatever operations we want on the different parts of the template
 literal.
 
@@ -884,9 +879,9 @@ function is used.
 An expression to be inserted in the current position, whose value is converted to a string or passed to a `tagFunction`
 
 #### tagFunction
- 
- If specified, it will be called with the template strings array and substitution expressions, and the return value becomes
- the value of the template literal
+
+If specified, it will be called with the template strings array and substitution expressions, and the return value becomes
+the value of the template literal
 
 ### Description
 
@@ -894,14 +889,14 @@ They are enclosed with `(`)` backticks characters instead of double quotes or si
 
 Along with having normal strings, template literals can also contain other parts called `placeholders`, which are embedded
 expressions delimited by dollar sign and curly braces: `${expression}`. The strings and placeholders get passed to a function
-—  either a default function, or a function we supply. The default function (when we don't supply our own) just perform
+— either a default function, or a function we supply. The default function (when we don't supply our own) just perform
 string interpolation to do substitution of the placeholders and then concatenate the parts into a single string
 
 To supply a function of our own, precede the template literal with the a function name; the result is called a tagged
 template. In that case, the template literal is passed to our tag function, where we can then perform whatever operations
 we want on the different parts of template literal
 
- To escape a backtick in a template literal, put a backlash before the backtick
+To escape a backtick in a template literal, put a backlash before the backtick
 
 ` `\`` === "`" // True
 
@@ -909,16 +904,16 @@ Dollar signs can be escaped as well to prevent interpolation
 
 `\${1}` === "${1}";  === "${1}" // True
 
-### Multi line strings 
+### Multi line strings
 
 Any new line characters inserted in the source are part of the template literal.
 
 Using normal strings, we would have to use the following syntax in order to get multi-line strings:
 
 ```javascript
-  console.log("string text line 1\nstring text line 2");
-  // "string text line 1
-  // string text line 2"
+console.log("string text line 1\nstring text line 2");
+// "string text line 1
+// string text line 2"
 ```
 
 Using template literals we can do the same with this
@@ -931,12 +926,12 @@ string text line 2`);
 ```
 
 Like `normal string literals`, we can write a single-line string across multiple lines for source code readability, by
-escaping newline with a blacklash `\`
+escaping newline with a backlash `\`
 
 ```javascript
-  console.log(`string text line 1 \
+console.log(`string text line 1 \
   string text line 2`);
-  // "string text line 1 string text line 2"
+// "string text line 1 string text line 2"
 ```
 
 ### String interpolation
@@ -954,9 +949,85 @@ not ${2 * a + b}.`);
 // not 20."
 ```
 
+We can notice that this have a mild difference from the:
 
+```javascript
+const a = 5;
+const b = 10;
+console.log("Fifteen is " + (a + b) + " and\nnot " + (2 * a + b) + ".");
+// "Fifteen is 15 and
+// not 20."
+```
 
+syntax. Template literals coerce their expressions directly to strings. Which by that we mean that JS converts the number
+into a string 
 
+### Nesting Template
+
+In certain cases, nesting a template is the easiest way to have configurable strings. Within a backtick delimited template,
+it is simple to allow inner backticks by using them inside an `${expression}` placeholder within the template.
+
+For example, without template literals, if we want to return a certain value based on a particular condition, we could
+do something like the following:
+
+```javascript
+  let classes = "header"
+
+  classes += isLargeScreen()
+    ? ""
+    : item.isCollapsed
+      ? " icon-expander"
+      : " icon-collapser"'
+```
+
+With a template literal but without nesting, we could do this:
+
+```javascript
+const classes = `header ${
+  isLargeScreen() ? "" : item.isCollapsed ? "icon-expander" : "icon-collapser
+}`;
+```
+
+With nesting literals we could do something like
+
+```javascript
+  const classes = `header ${
+    isLargeScreen() ? "" : : `icon-${item.isCollapsed ? "expander" : "collapser" }
+  }
+```
+
+### Tagged Templates
+
+A more advanced form of template literals are tagged templates.
+
+Tags allow you to parse template literals with a function. The first argument of a tag function contains an array of
+string values. The remaining arguments are related to the expressions.
+
+The tag function can then perform whatever operations on these arguments we wish, and return the manipulated string.
+(Alternatively, it can return something completely different, as described in one of the following examples)
+
+The name of the function in the tag may be whatever we want:
+
+```javascript
+const person = "Mike";
+const age = 28;
+
+function myTag(strings, personExp, ageExp) {
+  const str0 = strings[0]; // "That "
+  const str1 = strings[1]; // " is a "
+  const str2 = strings[2]; // "."
+
+  const ageStr = ageExp < 100 ? "youngster" : "centenarian";
+
+  // We can even return a string built using a template literal
+  return `${str0}${personExp}${str1}${ageStr}${str2}`;
+}
+
+const output = myTag`That ${person} is a ${age}.`;
+
+console.log(output);
+// That Mike is a youngster.
+```
 
 
 ## Sharing State Across Components
@@ -966,4 +1037,3 @@ We can start by the `Log` component. Which is a component that receives the game
 First we modify that component to accept a `turns` prop, and then map over this turns prop to a list of items. The `Log`
 components will return an ol with the player and the coordinates where it clicked on. Not forgetting the key attribute for
 dynamic lists, and it could be the row/col since it could be selected just once per game.
-  
