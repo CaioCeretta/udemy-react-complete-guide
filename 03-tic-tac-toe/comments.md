@@ -1009,8 +1009,8 @@ The tag function can then perform whatever operations on these arguments we wish
 The name of the function in the tag may be whatever we want:
 
 ```javascript
-const person = "Mike";
-const age = 28;
+const person = "Caio";
+const age = 30;
 
 function myTag(strings, personExp, ageExp) {
   const str0 = strings[0]; // "That "
@@ -1029,6 +1029,86 @@ console.log(output);
 // That Mike is a youngster.
 ```
 
+The tag does not have to be a plain identifier. You can use any expression with `precedence` greater than 16, which includes
+`property access`, `function call`, `new expression`, or even another tagged template literal.
+
+```js
+console.log`Hello`; // [ 'Hello' ]
+console.log.bind(1, 2)`Hello`; // 2 [ 'Hello' ]
+new Function("console.log(arguments)")`Hello`; // [Arguments] { '0': [ 'Hello' ] }
+
+function recursive(strings, ...values) {
+  console.log(strings, values);
+  return recursive;
+}
+recursive`Hello``World`;
+// [ 'Hello' ] []
+// [ 'World' ] []
+```
+
+Basically what happens here is. When we utilize backticks to create a string with interpolation, we can also use the name
+of the function before the first backtick. JS will get this string and pass it broken into pieces to the function. Let's
+break it down.
+
+1. console.log`Hello` // ['Hello']
+
+. What happens: console.log is a function. When called as a tagged template, it receives the splitted string (in this case,
+just the Hello) and prints it.
+. Why does it print an array?: Because the signature of a function tag first receives an array of strings (the static parts
+separated by commas) and then the values that were interpolated. Since that there are not variables, array has only
+['Hello']
+
+2. console.log.bind(1, 2)  Hello; // 2. [ 'Hello' ]
+
+. What happens: Here, we are using `bind(thisArg, arg1)`. .bind creates a new function where
+  1. `this` is fixed as number 1
+  2. First fixed argument is 2
+  
+. When we call this function with the template `Hello`. JS passes the template arguments right after the arguments that
+already were fixed by .bind
+
+. As a result, 2 comes from the arguments "stuck" by `bind`, and the array `['Hello'] come from the template.
+
+## Bind Function
+
+`bind` is a native method of all the functions in JS. Its main goal is to create a new function with two fixed characteristics:\
+
+1. It defines the value of `this` inside the function.
+2. It can fill (or "plaster") some initial arguments that the function will receive
+
+### How does it work in practice?
+
+Its basic syntax is:
+
+Assume we have a sum function
+
+```js
+function sum(a, b) {
+  console.log(`a = ${a}, b = ${b}`);
+  return a + b
+}
+```
+
+Normally, we would call it like this: sum(2, 6), where a is 2 and b is 6
+
+What `bind()` does with it?
+
+`bind` is used to *lock in* the first argument (and optionally the `this`). For example. lets create a function locking
+in a with the value 5
+
+```js
+  // .bind(null, 5) means:"
+  // 1. `this` will be null (we won't use it in here
+  // 2. The first argument `a` keeps locked in forever as 5.
+
+  const sumFive = sum.bind(null, 5);
+```
+
+Now the constant `sumFive` becomes a new function. When we call it, we only pass have to pass the next argument, that will
+be the `b`
+
+`sumFive(10)` will print 15
+ 
 
 ## Sharing State Across Components
 
