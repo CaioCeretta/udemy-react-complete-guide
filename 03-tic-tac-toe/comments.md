@@ -998,18 +998,72 @@ With nesting literals we could do something like
 
 ### Tagged Templates
 
-A more advanced form of template literals are tagged templates.
+*Tagged Templates* are an advanced form of template literals that allow us to parse and manipulate strings using a custom
+function (a tag)
 
-Tags allow you to parse template literals with a function. The first argument of a tag function contains an array of
-string values. The remaining arguments are related to the expressions.
+Instead of simply returning a interpolated string, the template literals is passed to a function that processes the static
+text segments and dynamic expressions, allowing us to return a completely custom result, ranging from sanitized HTML and
+localized strings to fully logged structures.
 
-The tag function can then perform whatever operations on these arguments we wish, and return the manipulated string.
-(Alternatively, it can return something completely different, as described in one of the following examples)
+#### How it works
 
-The name of the function in the tag may be whatever we want:
+When we prefix a template literal with a function name, JS does not immediately evaluate it into a standard string. Instead,
+it invokes the tag function, splitting the literal and delivering its parts following a strict language rule
 
-```javascript
-const person = "Caio";
+#### The Tagged Template Signature Rule
+
+When a tag function is invoked, JS delivers arguments in a specific order:
+
+1. First Argument (The Strings Array): Always an array containing the static text parts, split automatically wherever
+an interpolation (`${...}`) occurs. This array also possesses a special `raw` property containing the unescaped sequences.
+
+2. Remaining Arguments (...values): The evaluated values of the expressions interpolated inside the template literal
+
+#### Example
+
+```js
+const person = "Kyle";
+const age = 30;
+
+function logTag(strings, personExp, ageExp) {
+  const str0 = strings[0]; // "That "
+  const str1 = strings[1]; // " is a "
+  const str2 = strings[2]; // "."
+
+  const ageStr = ageExp < 100 ? "youngster" : "centenarian";
+
+  // Re-assembling and returning a new string
+  return `${str0}${personExp}${str1}${ageStr}${str2}`;
+}
+
+logTag`That ${person} is a${age}`
+
+// Output:
+// Static strings [ 'My name is ', ' and I am ', ' years old.' ]
+// Interpolated values [ 'Kyle', 30 ]
+```
+
+Notice that even if there are not variables to interpolate. JS still strictly delivers the first argument as an array 
+containing the static text
+
+```js
+function simpleTag(strings) {
+  return strings;
+}
+
+console.log(simpleTag`Hello`)
+
+// ['Hello']
+
+```
+
+### Anatomy of a Custom Tag: Formatting & Logic
+
+We can perform any operations we like inside a tag function. For instance, we can construct custom markup, handle formatting,
+or conditionally alter output based on expression values:
+
+```js
+const person = "Mike";
 const age = 30;
 
 function myTag(strings, personExp, ageExp) {
@@ -1019,101 +1073,155 @@ function myTag(strings, personExp, ageExp) {
 
   const ageStr = ageExp < 100 ? "youngster" : "centenarian";
 
-  // We can even return a string built using a template literal
+  // Re-assembling and returning a new string
   return `${str0}${personExp}${str1}${ageStr}${str2}`;
 }
 
-const output = myTag`That ${person} is a ${age}.`;
+const output = myTag`That ${person} is a${age}.`;
 
 console.log(output);
 // That Mike is a youngster.
 ```
 
-The tag does not have to be a plain identifier. You can use any expression with `precedence` greater than 16, which includes
-`property access`, `function call`, `new expression`, or even another tagged template literal.
+### Advanced Expression Tag
 
+The tag expressions does not have a simple identifier. We can use any valid expression with a precedence that allows it,
+such as property access, function calls, `bind()`, `new` expressions, or even nested tagged templates.
 
+#### Example 1: Using built in methods such as console.log
 
-#### Example 2
+console.log`Hello`
+
+1. What happens: console.log acts directly as the tag function. Because there are no interpolated variables. It receives
+an array containing a single string ['Hello'] and prints it to the console
+
+#### Example 2: Bound functions (console.log.bind)
+
+`console.log.bind(1, 2)`Hello`;
+`// 2 ['Hello']`
+
+What happens: 
+
+1. .bind(1, 2) creates a new wrapper function where this is bound to 1, and the first fixed argument is permanently
+set to 2
+2. When tagged template  Hello` executes right after, JS passes the bound arguments first (2) followed by the tagged
+template arguments  (`['Hello']`).
+3. This function is equivalent to calling
+
+`console.log(2, ['Hello']);`
+
+#### Example 3: Dynamic Constructor Invocations
 
 ```js
-console.log`Hello`; // [ 'Hello' ]
-console.log.bind(1, 2)`Hello`; // 2 [ 'Hello' ]
-new Function("console.log(arguments)")`Hello`; // [Arguments] { '0': [ 'Hello' ] }
+new Function("console.log(arguments)")`Hello`;
+// [Arguments] { '0': ['Hello' ] }
+```
 
-function recursive(strings, ...values) {
-  console.log(strings, values);
-  return recursive;
+1. new Function("console.log(arguments)") dynamically creates a new function in runtime
+2. The result of new Function(...) expression is itself a callable function, which becomes the tag function.
+3. When the tagged template is executed, JS automatically passes the template string array as the first argument
+4. Since there are no interpolated expressions, the function receives only one argument ['Hello']. Inside the generated
+function, arguments contains:
+
+`arguments[0] === 'Hello'`
+
+#### Example 4: Property access expressions
+
+```js
+const logger = {
+  print(strings) {
+    console.log(strings);
+  }
 }
-recursive`Hello``World`;
-// [ 'Hello' ] []
-// [ 'World' ] []
+
+logger.print`Hello`;
+// [`Hello`]
 ```
 
-Basically what happens here is. When we utilize backticks to create a string with interpolation, we can also use the name
-of the function before the first backtick. JS will get this string and pass it broken into pieces to the function. Let's
-break it down.
+logger.print is evaluated first.
+The property access expression returns the `print` function
+JS uses the function as the tag
+The template literal automatically provides the strings array as the first argument.
 
-##### 1. console.log`Hello` // ['Hello']
-
-. What happens: console.log is a function. When called as a tagged template, it receives the splitted string (in this case,
-just the Hello) and prints it.
-. Why does it print an array?: Because the signature of a function tag first receives an array of strings (the static parts
-separated by commas) and then the values that were interpolated. Since that there are not variables, array has only
-['Hello']
-
-##### 2. console.log.bind(1, 2)  Hello; // 2. [ 'Hello' ]
-
-. What happens: Here, we are using `bind(thisArg, arg1)`. .bind creates a new function where
-  1. `this` is fixed as number 1
-  2. First fixed argument is 2
-  
-console.log accepts how many arguments we want to pass, and when we make something like `console.log.bind(1, 2)` we create
-a new version of `console.log` where, the first fixed argument is 2. And when we place the template string right after
-the closing parentheses, JS got the argument fixed by `bind` (2), and combined it with the argument generated by the
-template string (['Hello']).
-
-Making it the equivalent of calling
-console.log(2, ['Hello'])
-
-And the Hello was inside a string because of the way JS deals with Tagged Templates under the hood. Every time we use a
-function as a "tag" before a backtick, (ex: ourFunctionHello``)`, JS follows a strict rule of how it delivers the data
-to this function.
-
-###### Tagged Template Rule
-
-When a function is called via template, JS splits the text in two parts and delivers it in this exact order:
-
-1. The first argument ALWAYS is an array containing the static text parts (the pure strings)
-2. The following arguments (if there are) they are variable values that were interpolated using `${...}`.
-
-Let's look in an example 
+#### Example 5: Function call returning a tag function
 
 ```js
-const name = "Kyle"; 
-const age = 30;
+function createLogger() {
+  return function(strings) {
+    console.log(strings);
+  }
+}
 
-// Calling a custom tag function
-myTag`my name is ${name} and i am ${age} years old.`
+createLogger()`Hello`;
 ```
 
-If we create the function `myTag` and console.log it in its arguments we would see
+1. createLogger() executes first
+2. Its return value is another function
+3. That returned function becomes the tag function
+4. JS passes the template strings array to it .
 
-. First argument (array of strings)
-Javascript splits the phrase where ${...} is found and places the slices of the text inside an array
-`['My name is', ', and i am ', 'years old.']`
+This is equivalent to
 
-The following arguments
-"Kyle", 30
+```js
+  const tag = createLogger();
 
-Which means that, in our hello example, there is not any variable to be interpolated. But still, by language rule, JS
-needs to deliver the first argument as an array of strings
+  tag(['Hello'])
+```
 
+#### Example 6: Nested Tagged Templates
 
+```js
+  function outer(strings) {
+    console.log(strings);
+    return inner;
+  }
 
+  function inner(strings) {
+    console.log(strings);
+  }
 
+  outer`First``Second`;
 
+  // ['First']
+  // ['Second']
+```
 
+1. outer\First`` executes first
+2. JS calls outer(['First']).
+3. outer returns the function inner.
+4. The second tagged template immediately invokes the returned function as a tag
+5. JS calls inner(['Second'])
+
+This is equivalent to
+
+```js
+  const result = outer(['First'])';
+
+  result(['Second'])
+```
+
+### Key Takeaway
+
+The expression before a tagged template does not need to be a simple function name. JS first evaluates the entire expression
+and then expects the result to be callable. If the final value is a function, that function becomes the tag and receives:
+
+1. The template strings array as the first argument
+2. Each interpolated expression as the subsequent arguments
+
+```js
+  tag`Hello ${name} ${age}`
+
+  // equivalent to
+
+  tag(
+    ['Hello ', ' ', ''],
+    name,
+    age
+  )
+```
+
+This is why property access, functions calls, bind(), constructor expressions, and even tagged templates can all appear
+before a template literal. The only requirement is that the evaluated result must be a callable function.
 
 
 ## Bind Function
