@@ -409,3 +409,61 @@ case, from the gameTurns state that is managed in the App component.
 We are deriving the `gameBoard` from that state and this is how we should think and work with React. To manage as little
 state as needed and try to derive as much information and as many values from that state.
 
+## Reducing state management and identifying unnecessary state
+
+We just made sure that we compute that gameBoard value based on the `gameTurns` state that it receives as props from the
+App component.
+
+But before including new features, let's take a look in that `App` component
+
+Is there anything else we can compute in there? Maybe something we are currently managing as state?
+
+And the answer is yes, even though we are setting the `currentPlayer` state. The player needs to change after every turn
+and we need to update the UI, such as highlighting the current active player and the updating the symbol that will be placed
+on the boxes. Making us think that managing that in a state would be the best option, but it is not.
+
+Because yes, we need state to trigger an UI update, but let's not forget that we have that `gameTurns` state that already
+changes the player whenever a box is selected. So we definitely don't need that player to manage that currentPlayer state
+just to trigger a ui update when that happens.
+
+We might think: Ok, but we need the information about the current/last player, but we already have access to that information
+based on the previous turn of the gameTurns state. 
+
+That means that instead of having a dedicated player state, we can add some derived state. We can start by copying the logic
+inside the handleSelectSquare and place it outside the function. The difference will be that inside the `App` component
+we are not getting the currentPlayer information based on some old gameTurn state, but instead using the current `gameTurns`
+state. With that, we are then deriving the symbol of the currently active player from gameTurns.
+
+### Why do we have both functions instead of just one?
+
+Even though the code is pretty similar, this was made for a reason related to the asynchronous functioning of a React's
+setState.
+ 
+### 1. Outside the `setGameTurns` (Derived for rendering)
+
+```javascript
+  let currentPlayer = X;
+  if(gameTurns.length > 0 && gameTurns[0].player === "X") currentPlayer = "O";
+```
+
+° For what it is used: In each component rendering, React needs to know who is the player to play to *show on the screen*
+(For example: "Now it's X's player turn") or to style the board
+
+° How does it work: This variable is directly recalculated based on the current `gameTurn` state. Since React re-renders
+the component every time the state changes, this variable is always in sync with the shown visual UI the player is seeing.
+
+### 2. Inside of `setGameTurns` (Based on the setter previous state)
+
+```js
+
+  setGameTurns((prevTurns) => {
+    let currentPlayer = X;
+    if(prevTurns.length > 0 && prevTurns[0].player === "X") currentPlayer = "O";
+  })
+```
+
+° For what it is used: To ensure data consistency when the state is synchronously updated
+
+° The problem it avoids (Stale State / Race Condition):  In React, state updates can be scheduled or happen in bulks. If
+the user clicks too fast on two squares in a row, the globaL `gameTurns` variable can not be updated yet when the second
+click is processed.
