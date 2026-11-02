@@ -5,11 +5,12 @@ import Log from "./components/Log";
 
 function App() {
   const [gameTurns, setGameTurns] = useState([]);
-  const [activePlayer, setActivePlayer] = useState("X");
+
+  let currentPlayer = "X";
+
+  if (gameTurns.length > 0 && gameTurns[0].player === "X") currentPlayer = "O";
 
   function handleSelectSquare(rowIndex, colIndex) {
-    setActivePlayer((prevPlayer) => (prevPlayer === "X" ? "O" : "X"));
-    
     setGameTurns((prevTurns) => {
       let currentPlayer = "X";
 
