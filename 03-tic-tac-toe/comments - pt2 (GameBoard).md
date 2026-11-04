@@ -467,3 +467,24 @@ the component every time the state changes, this variable is always in sync with
 ° The problem it avoids (Stale State / Race Condition):  In React, state updates can be scheduled or happen in bulks. If
 the user clicks too fast on two squares in a row, the globaL `gameTurns` variable can not be updated yet when the second
 click is processed.
+By using the callback function `(prevTurns) => {...}`, we will ensure that we are retrieving the most recent and real of
+the exact moment this update will happen, avoiding that two turns on a row remain as the same player.
+
+### Practical Summary
+
+Outside the Setter - Component's Scope - Main objective is to control the visual UI
+Inside the Setter - Callback function - Ensure the logic's integrity and avoid outdated state when processing plays.
+
+Therefore, outside the setter is for the user presentation and inside holds how the data is calculated under the hood.
+
+## Back to Tic-Tac-Toe Game
+
+So now we have both the activePlayer inside the gameTurns setter, based on the previous state, and the activePlayer outside
+the setter and based on the current state.
+
+However, we can't get rid of the variable inside the gameTurns setter, because it reflects the most "fresh" state update.
+
+But one thing we can do is to create a function outside of the function, where it does'nt need access to the state or any
+other data related to the component and it also should not be created when the component function is executed, where it 
+will receive the gameTurns as property and derive the current active player from it. We can also make use of that function
+inside the setter and it will work continue working as usual.
